@@ -1,3 +1,26 @@
-* {
+@import "./tokens.css";
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-rubik);
+  background-color: var(--background-page);
+  color: var(--text-primary);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-unbounded);
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
 }
