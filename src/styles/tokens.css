@@ -1,0 +1,116 @@
+:root {
+  /* Colors */
+  --background-page: #fff8ec;
+  --background-surface: #ffffff;
+  --background-subtle: #f5eee0;
+  --background-inverse: #1a1033;
+  --background-inverse-2: #2b1f52;
+  --brand-primary: #6c3bff;
+  --brand-primary-hover: #5527e6;
+  --brand-primary-soft: #ede6ff;
+  --brand-accent: #ffd23f;
+  --brand-accent-soft: #fff3c4;
+  --brand-pink: #ff4d7a;
+  --text-primary: #1a1033;
+  --text-secondary: #4a4166;
+  --text-tertiary: #6b6386;
+  --text-inverse: #ffffff;
+  --text-inverse-soft: #c9c1e8;
+  --text-brand: #5527e6;
+  --border-subtle: #e8ddc9;
+  --border-strong: #1a1033;
+  --border-inverse: #40326e;
+  --status-success: #1a7f45;
+  --status-success-soft: #dff5e7;
+  --status-warning: #9a5b00;
+  --status-warning-soft: #fff0cc;
+  --status-error: #d12c1f;
+  --status-error-soft: #fde6e3;
+  --status-info: #2457d6;
+  --status-info-soft: #e3ecff;
+  --world-neon: #7c4dff;
+  --world-neon-soft: #eee8ff;
+  --world-coral: #00a3a3;
+  --world-coral-soft: #ddf6f4;
+  --world-forest: #2e9e4f;
+  --world-forest-soft: #e2f5e6;
+  --world-forge: #f2541b;
+  --world-forge-soft: #ffe7dc;
+  --world-orbit: #2563eb;
+  --world-orbit-soft: #e1eaff;
+  --world-mist: #c026d3;
+  --world-mist-soft: #f9e3fb;
+  --rarity-common: #7d7690;
+  --rarity-rare: #2f6bff;
+  --rarity-epic: #8b3dff;
+  --rarity-legendary: #d99a00;
+  --rarity-legendary-soft: #fff1c2;
+
+  /* Dimensions & Spacing */
+  --radius-s: 8px;
+  --radius-m: 12px;
+  --radius-l: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 24px;
+  --spacing-6: 32px;
+  --spacing-7: 48px;
+  --spacing-8: 64px;
+  --border-width: 2px;
+
+  /* Font families (Google Fonts) */
+  --font-unbounded: 'Unbounded', system-ui, sans-serif;
+  --font-rubik: 'Rubik', system-ui, sans-serif;
+
+  /* Shadows */
+  --shadow-pop: 4px 4px 0px 0px #1a1033;
+  --shadow-pop-small: 2px 2px 0px 0px #1a1033;
+  --shadow-floating: 0px 16px 40px -8px #1a10332e;
+  --glow-legendary: 0px 0px 24px 2px #ffc71a8c;
+}
+
+/* Figma text styles as classes. */
+.heading-giant,
+.titular-gigante { font-family: var(--font-unbounded); font-weight: 900; font-size: 88px; line-height: 92px; letter-spacing: -2px; }
+.heading-display,
+.titular-display { font-family: var(--font-unbounded); font-weight: 700; font-size: 56px; line-height: 62px; letter-spacing: -1.5px; }
+.heading-h1,
+.titular-h1 { font-family: var(--font-unbounded); font-weight: 700; font-size: 40px; line-height: 46px; letter-spacing: -1px; }
+.heading-h2,
+.titular-h2 { font-family: var(--font-unbounded); font-weight: 600; font-size: 28px; line-height: 34px; letter-spacing: -0.5px; }
+.heading-h3,
+.titular-h3 { font-family: var(--font-unbounded); font-weight: 600; font-size: 20px; line-height: 26px; }
+.heading-h4,
+.titular-h4 { font-family: var(--font-rubik); font-weight: 700; font-size: 16px; line-height: 22px; }
+.data-stat,
+.dato-cifra { font-family: var(--font-unbounded); font-weight: 700; font-size: 32px; line-height: 36px; letter-spacing: -0.5px; }
+.data-card-number,
+.dato-numero-de-cromo { font-family: var(--font-unbounded); font-weight: 700; font-size: 14px; line-height: 16px; }
+.body-l,
+.cuerpo-g { font-family: var(--font-rubik); font-weight: 400; font-size: 18px; line-height: 28px; }
+.body-m,
+.cuerpo-m { font-family: var(--font-rubik); font-weight: 400; font-size: 16px; line-height: 24px; }
+.body-m-bold,
+.cuerpo-m-fuerte { font-family: var(--font-rubik); font-weight: 600; font-size: 16px; line-height: 24px; }
+.body-s,
+.cuerpo-p { font-family: var(--font-rubik); font-weight: 400; font-size: 14px; line-height: 20px; }
+.body-s-bold,
+.cuerpo-p-fuerte { font-family: var(--font-rubik); font-weight: 600; font-size: 14px; line-height: 20px; }
+.detail-note,
+.detalle-nota { font-family: var(--font-rubik); font-weight: 400; font-size: 12px; line-height: 16px; }
+.detail-note-bold,
+.detalle-nota-fuerte { font-family: var(--font-rubik); font-weight: 600; font-size: 12px; line-height: 16px; }
+.detail-label,
+.detalle-etiqueta { font-family: var(--font-rubik); font-weight: 700; font-size: 11px; line-height: 14px; letter-spacing: 0.060em; text-transform: uppercase; }
+.card-name-l,
+.cromo-nombre-g { font-family: var(--font-unbounded); font-weight: 600; font-size: 17px; line-height: 22px; }
+.card-name-m,
+.cromo-nombre-m { font-family: var(--font-unbounded); font-weight: 600; font-size: 13px; line-height: 17px; }
+.card-name-s,
+.cromo-nombre-p { font-family: var(--font-unbounded); font-weight: 600; font-size: 10px; line-height: 13px; }
+.card-number-s,
+.cromo-numero-p { font-family: var(--font-unbounded); font-weight: 700; font-size: 9px; line-height: 11px; }
