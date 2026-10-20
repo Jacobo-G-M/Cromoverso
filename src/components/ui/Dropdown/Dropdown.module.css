@@ -1,0 +1,23 @@
+.container {
+  position: relative;
+  display: inline-block;
+  width: fit-content;
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + var(--spacing-2));
+  left: 0;
+  z-index: 50;
+  min-width: 180px;
+  background-color: var(--background-surface);
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-pop);
+  overflow: hidden;
+}
+
+.active button {
+  box-shadow: var(--glow-purple) !important;
+  border-color: var(--border-strong) !important;
+}

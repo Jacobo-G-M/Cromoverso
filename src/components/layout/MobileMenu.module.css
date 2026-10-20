@@ -1,0 +1,104 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--background-page);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.header {
+  background-color: var(--background-surface);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-3) var(--spacing-4);
+  border-bottom: var(--border-width) solid var(--border-strong)
+}
+
+.header button {
+  box-shadow: none;
+  outline: none;
+}
+
+.navList {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  overflow-y: auto;
+  padding: var(--spacing-2) 0;
+  flex: 1;
+  min-height: 0;
+}
+
+.navItem {
+  display: flex;
+  background-color: var(--background-page);
+  padding: var(--spacing-3) var(--spacing-4);;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  transform: background-color 0.15s ease, color 0.15s ease;
+}
+
+.itemLeft {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.itemLeft svg {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.chevron {
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
+button.navItem:active {
+  background-color: var(--brand-primary);
+  color: var(--text-inverse);
+}
+
+.navItem:active .chevron{
+  color: var(--text-inverse);
+}
+
+.bottomSection {
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.dividerAccount {
+  border: none;
+  border-top: var(--border-width) solid var(--border-strong);
+  width: 100%
+}
+
+.dividerPreferences {
+  border: none;
+  border-top: 1px solid var(--border-subtle);
+  width: 100%
+}
+
+.account {
+  background-color: var(--background-surface);
+  display: flex;
+  flex-direction: row;
+  padding: var(--spacing-4) var(--spacing-5);
+  gap: var(--spacing-3);
+  justify-content: space-between;
+}
+
+.account button {
+  flex: 1
+}
