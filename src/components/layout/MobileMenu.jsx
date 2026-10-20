@@ -17,9 +17,8 @@ import styles from './MobileMenu.module.css'
 import Button from '../ui/Button/Button'
 import PillSwitch from '../ui/PillSwitch/PillSwitch'
 
-const MobileMenu = ({ isOpen, onClose }) => {
+const MobileMenu = ({ isOpen, onClose, language, changeLanguage }) => {
   if (!isOpen) return null;
-  const [optionLanguage, setOptionLanguage] = useState('ES')
 
   const navItems = [
     { label: 'Inicio', icon: <InicioIcon /> },
@@ -65,7 +64,11 @@ const MobileMenu = ({ isOpen, onClose }) => {
             <GloboIcon />
             Idioma
           </div>
-          <PillSwitch options={['ES', 'EN']} value={optionLanguage} onChange={setOptionLanguage}/>
+          <PillSwitch 
+            options={['ES', 'EN']} 
+            value={language?.toUpperCase()} 
+            onChange={(newLang) => changeLanguage(newLang.toLowerCase())}
+          />
         </div>
         <button className={styles.navItem} onClick={onClose}>
           <div className={`${styles.itemLeft} body-m-bold`}>

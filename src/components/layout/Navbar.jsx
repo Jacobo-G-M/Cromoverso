@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTexts } from '../../hooks/useTexts';
 import Button from '../ui/Button/Button';
 import Input from '../ui/Input/Input';
 import Dropdown from '../ui/Dropdown/Dropdown';
@@ -12,51 +13,74 @@ import CheckIcon from '../../assets/icons/check.svg?react'
 import styles from './Navbar.module.css'
 import MobileMenu from './MobileMenu';
 
-const Navbar = () => {
+const LINKS_TITLES = {
+  album: "/album",
+  intercambios: "/intercambios",
+  mundos: "/mundos",
+  ranking: "/ranking",
+  sobres: "/sobres",
+}
+
+const Navbar = ({ texts, language, changeLanguage }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [langSelect, setLangSelect] = useState('ES')
+  const nav = texts?.navbar;
+
+  const links = Object.entries(nav?.enlaces ?? {}).filter(([key]) => LINKS_TITLES[key])
 
   return (
     <header className={styles.navbar}>
-      <div className={styles.navLeft}>
-        <LogoNormalIcon />
-        <div className={styles.desktopOnly}>
-          <Button variant='ghost' size='s'>
-            Álbum
-          </Button>
-        </div>
-      </div>
+      <nav className={styles.navLeft}>
+        <a href="/">
+          <LogoNormalIcon />
+        </a>
+        {nav && (
+          <>
+            <div className={styles.desktopOnly}>
+              {
+                links.map(([key, tag]) => (
+                  <Button key={key} variant='ghost' size='s' href={key}>
+                    {tag}
+                  </Button>
+                ))
+              }
+            </div>
+          </>
+        )}
+      </nav>
 
-      <div className={styles.navRight}>
-        <div className={styles.desktopOnly} style={{ maxWidth: "400px", flex: 1 }}>
-          <Input placeholder="Busca un héroe o un número" icon={<BuscarIcon />} />
-        </div>
+      <nav className={styles.navRight}>
+        {nav && (
+          <div className={styles.desktopOnly} style={{ maxWidth: "400px", flex: 1 }}>
+            <Input placeholder={nav?.buscador?.placeholder} icon={<BuscarIcon />} />
+          </div>
+
+        )}
         <div className={styles.desktopOnly}>
           <Dropdown
             trigger={<Button variant='secondary' className={styles.select}>
               <GloboIcon />
-              {langSelect}
+              {language.toUpperCase()}
               <ChevronAbajoIcon />
             </Button>}
           >
             <div className={styles.language}>
               <span className='detail-label'>Idioma · Language</span>
-              <div className={`${styles.languageOption} ${langSelect === "ES" ? styles.langSelected : ""}`} onClick={() => setLangSelect('ES')}>
+              <div className={`${styles.languageOption} ${language === "es" ? styles.langSelected : ""}`} onClick={() => changeLanguage('es')}>
                 <div>
                   <p className='body-s-bold'>Español</p>
                   <span className='detail-note'>lang="es-CO"</span>
                 </div>
                 <div className={styles.iconSelect}>
-                  {langSelect === "ES" && (<CheckIcon />)}
+                  {language === "es" && (<CheckIcon />)}
                 </div>
               </div>
-              <div className={`${styles.languageOption} ${langSelect === "EN" ? styles.langSelected : ""}`} onClick={() => setLangSelect('EN')}>
+              <div className={`${styles.languageOption} ${language === "en" ? styles.langSelected : ""}`} onClick={() => changeLanguage('en')}>
                 <div>
                   <p className='body-s-bold'>English</p>
                   <span className='detail-note'>lang="en"</span>
                 </div>
                 <div className={styles.iconSelect}>
-                  {langSelect === "EN" && (<CheckIcon />)}
+                  {language === "en" && (<CheckIcon />)}
                 </div>
               </div>
               <span className="detail-note" style={{ padding: "var(--spacing-1)" }}>
@@ -70,14 +94,18 @@ const Navbar = () => {
             <AccesibilidadIcon />
           </Button>
         </div>
-        <Button variant='secondary' size='s'>
-          Ingresar
-        </Button>
-        <div className={styles.desktopOnly}>
-          <Button size='s'>
-            Crear cuenta
+        {nav && (
+          <Button variant='secondary' size='s'>
+            {nav?.botones?.ingresar}
           </Button>
-        </div>
+        )}
+        {nav && (
+          <div className={styles.desktopOnly}>
+            <Button size='s'>
+              {nav?.botones?.crearCuenta}
+            </Button>
+          </div>
+        )}
         <div className={styles.mobileOnly}>
           <Button
             variant='secondary'
@@ -88,10 +116,12 @@ const Navbar = () => {
             <MenuIcon />
           </Button>
         </div>
-      </div>
+      </nav>
       <MobileMenu
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
+        language={language}
+        changeLanguage={changeLanguage}
       />
     </header>
   )

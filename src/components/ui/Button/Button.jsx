@@ -7,6 +7,7 @@ const Button = ({
   size = "s",
   className = "",
   circle = false,
+  href = "",
   ...props
 }) => {
   const buttonClasses = `
@@ -16,6 +17,14 @@ const Button = ({
     ${circle ? styles.circle : ''}
     ${className}
   `.trim();
+
+  if (href) {
+    return (
+      <a href={href} className={buttonClasses} {...props}>
+        {children}
+      </a>
+    )
+  }
 
   return (
     <button type="button" className={buttonClasses} {...props}>
