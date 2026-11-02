@@ -30,11 +30,13 @@ const Navbar = ({ texts, language, changeLanguage }) => {
   const [textSize, setTextSize] = useState('Normal');
   const [accesibilityToggles, setAccesibilityToggles] = useState({});
 
+  // Reset accesibility options
   const handleResetAccesibility = () => {
     setAccesibilityToggles({});
     setTextSize('Normal')
   }
 
+  // Get texts from navbar and accesibility
   const nav = texts?.navbar;
   const accesibility = texts?.accesibilidad;
   const accesibilityHelp = Object.entries(accesibility ?? {})
@@ -46,11 +48,15 @@ const Navbar = ({ texts, language, changeLanguage }) => {
   const links = Object.entries(nav?.enlaces ?? {}).filter(([key]) => LINKS_TITLES[key])
 
   return (
+    // Navbar
     <header className={styles.navbar}>
+      {/* / Left component from navbar / */}
       <nav className={styles.navLeft}>
+        {/* / Icon / */}
         <a href="/">
           <LogoNormalIcon />
         </a>
+        {/* / Links / */}
         {nav && (
           <>
             <div className={styles.desktopOnly}>
@@ -65,9 +71,81 @@ const Navbar = ({ texts, language, changeLanguage }) => {
           </>
         )}
       </nav>
-
+      {/* / Right component from navbar / */}
       <nav className={styles.navRight}>
+        <div className={styles.desktopOnly}>
+          {/* / Accesibility button and menu / */}
+          <div className={styles.desktopOnly}>
+            <Dropdown
+              isOpen={isMenuAccesibilityOpen}
+              onClose={() => setIsMenuAccesibilityOpen(false)}
+              trigger={
+                <Button variant='secondary' size='s' circle={true} onClick={() => setIsMenuAccesibilityOpen(!isMenuAccesibilityOpen)}>
+                  <AccesibilidadIcon />
+                </Button>}
+            >
+              <section className={styles.accesibility}>
+                <div className={styles.accesibilityTitle}>
+                  <h3 className="heading-h3">{accesibility?.titulo}</h3>
+                  <Button circle={true} variant='ghost' size='m' onClick={() => setIsMenuAccesibilityOpen(false)}>
+                    <CerrarIcon />
+                  </Button>
+                </div>
+                <div className={styles.accesibilityTextSize}>
+                  <p className='body-m-bold'>{accesibility?.tamanoTexto?.titulo}</p>
+                  <PillSwitch
+                    options={Object.values(accesibility?.tamanoTexto?.opciones ?? {})}
+                    value={textSize}
+                    onChange={setTextSize}
+                    shapeButton='rounded'
+                    border={false}
+                    fullWidth={true}
+                  />
+                </div>
+                <div className={styles.accesibilityOptions}>
+                  {accesibility && (
+                    accesibilityHelp.map((item, index) => (
+                      <div key={index} className={styles.accesibilityRow}>
+                        <div className={styles.accesibilityOptionLeft}>
+                          <p className={'body-m-bold'}>{item.title}</p>
+                          <p className={'body-s'} style={{ color: 'var(--text-secondary)' }}>{item.help}</p>
+                        </div>
+                        <div>
+                          <Switch
+                            checked={!!accesibilityToggles[item.key]}
+                            onChange={(isChecked) => {
+                              setAccesibilityToggles(prev => ({
+                                ...prev,
+                                [item.key]: isChecked
+                              }))
+                            }}
+                          />
+                        </div>
+                      </div>
+                    ))
+                  )}
 
+                </div>
+                <div className={styles.accesibilityRestart}>
+                  <p
+                    className={'body-s-bold'}
+                    style={{ color: 'var(--brand-primary)', textDecoration: 'underline' }}
+                  >
+                    {accesibility?.enlaces?.declaracion}
+                  </p>
+                  <Button
+                    variant='secondary'
+                    onClick={handleResetAccesibility}
+                    className={styles.resetButton}
+                  >
+                    {accesibility?.botones?.restablecer}
+                  </Button>
+                </div>
+              </section>
+            </Dropdown>
+          </div>
+        </div>
+        {/* / Language switch / */}
         <div className={styles.desktopOnly}>
           <PillSwitch
             options={['ES', 'EN']}
@@ -75,87 +153,18 @@ const Navbar = ({ texts, language, changeLanguage }) => {
             onChange={(newLang) => changeLanguage(newLang.toLowerCase())}
           />
         </div>
+          
+        {/* / Log in button / */}
+        <Button variant='secondary' size='s'>
+          {nav?.botones?.ingresar ?? 'Ingresar'}
+        </Button>
+        {/* / Sign up button / */}
         <div className={styles.desktopOnly}>
-          <Dropdown
-            isOpen={isMenuAccesibilityOpen}
-            onClose={() => setIsMenuAccesibilityOpen(false)}
-            trigger={
-              <Button variant='secondary' size='s' circle={true} onClick={() => setIsMenuAccesibilityOpen(!isMenuAccesibilityOpen)}>
-                <AccesibilidadIcon />
-              </Button>}
-          >
-            <section className={styles.accesibility}>
-              <div className={styles.accesibilityTitle}>
-                <h3 className="heading-h3">{accesibility?.titulo}</h3>
-                <Button circle={true} variant='ghost' size='m' onClick={() => setIsMenuAccesibilityOpen(false)}>
-                  <CerrarIcon />
-                </Button>
-              </div>
-              <div className={styles.accesibilityTextSize}>
-                <p className='body-m-bold'>{accesibility?.tamanoTexto?.titulo}</p>
-                <PillSwitch
-                  options={Object.values(accesibility?.tamanoTexto?.opciones ?? {})}
-                  value={textSize}
-                  onChange={setTextSize}
-                  shapeButton='rounded'
-                  border={false}
-                  fullWidth={true}
-                />
-              </div>
-              <div className={styles.accesibilityOptions}>
-                {accesibility && (
-                  accesibilityHelp.map((item, index) => (
-                    <div key={index} className={styles.accesibilityRow}>
-                      <div className={styles.accesibilityOptionLeft}>
-                        <p className={'body-m-bold'}>{item.title}</p>
-                        <p className={'body-s'} style={{ color: 'var(--text-secondary)' }}>{item.help}</p>
-                      </div>
-                      <div>
-                        <Switch 
-                          checked={!!accesibilityToggles[item.key]}
-                          onChange={(isChecked) => {
-                            setAccesibilityToggles(prev => ({
-                              ...prev,
-                              [item.key]: isChecked
-                            }))
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))
-                )}
-
-              </div>
-              <div className={styles.accesibilityRestart}>
-                <p 
-                  className={'body-s-bold'} 
-                  style={{ color: 'var(--brand-primary)', textDecoration: 'underline' }}
-                >
-                  {accesibility?.enlaces?.declaracion}
-                </p>
-                <Button 
-                  variant='secondary' 
-                  onClick={handleResetAccesibility}
-                  className={styles.resetButton}
-                >
-                    {accesibility?.botones?.restablecer}
-                </Button>
-              </div>
-            </section>
-          </Dropdown>
-        </div>
-        {nav && (
-          <Button variant='secondary' size='s'>
-            {nav?.botones?.ingresar ?? 'Ingresar'}
+          <Button size='s'>
+            {nav?.botones?.crearCuenta ?? "Crear cuenta"}
           </Button>
-        )}
-        {nav && (
-          <div className={styles.desktopOnly}>
-            <Button size='s'>
-              {nav?.botones?.crearCuenta ?? "Crear cuenta"}
-            </Button>
-          </div>
-        )}
+        </div>
+        {/* / Mobile menu button / */}
         <div className={styles.mobileOnly}>
           <Button
             variant='secondary'
@@ -167,6 +176,7 @@ const Navbar = ({ texts, language, changeLanguage }) => {
           </Button>
         </div>
       </nav>
+      {/* / Mobile menu / */}
       <MobileMenu
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}

@@ -36,7 +36,7 @@ const Dropdown = ({
 
   return (
     <div ref={dropdownRef} className={styles.container}>
-      <div onClick={() => setIsOpen(!isOpen)} className={`${styles.trigger} ${isOpen ? styles.active : ""}`}>
+      <div onClick={() => setIsOpen(!isOpen)} className={`${styles.trigger} ${showMenu ? styles.active : ""}`}>
         {trigger}
       </div>
       {showMenu && (
