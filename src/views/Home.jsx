@@ -13,6 +13,7 @@ import ForjaIcon from '../assets/icons/forja.svg?react'
 import OrbitaIcon from '../assets/icons/orbita.svg?react'
 import NieblaIcon from '../assets/icons/niebla.svg?react'
 
+import abanicoCromos from '../assets/cards/abanico-de-cromos.png'
 
 import styles from './Home.module.css'
 import Button from '../components/ui/Button/Button'
@@ -53,7 +54,19 @@ const Home = ({ texts }) => {
             </p>
           </div>
         </div>
-        <div className={styles.herovisual}></div>
+        <div className={styles.heroVisual}>
+          <div className={styles.guardianBadge}>
+            <DestellosIcon />
+            <span className="detail-label">
+              {texts?.hero?.etiquetas?.guardiana ?? 'Guardiana holográfica'}
+            </span>
+          </div>
+          <img 
+            src={abanicoCromos} 
+            alt="Abanico de cromos" 
+            className={styles.heroCardsImage}
+          />
+        </div>
       </section>
       <section className={styles.worlds}>
         <div className={styles.worldsHeader}>

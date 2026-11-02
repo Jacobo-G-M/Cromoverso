@@ -1,7 +1,12 @@
 .hero {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   background-color: var(--background-inverse);
+  background-image: url('../assets/background/rayos-web.png');
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: cover;
   gap: var(--spacing-3);
   padding: var(--spacing-8) var(--spacing-7) var(--spacing-10)
 }
@@ -11,6 +16,7 @@
 }
 
 .heroContent {
+  width: 45%;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-3);
@@ -29,6 +35,34 @@
 
 .heroNote svg {
   color: var(--brand-accent)
+}
+
+.heroVisual {
+  position: relative;
+  width: fit-content
+}
+
+.guardianBadge {
+  position: absolute;
+  top: 0;
+  left: 25%;
+  z-index: 2;
+  box-shadow: var(--shadow-pop-small);
+  transform: translateY(-100%) rotate(-6deg);
+  white-space: nowrap;
+  display: flex;
+  gap: var(--spacing-1);
+  align-items: center;
+  padding: var(--spacing-1) var(--spacing-2);
+  background-color: var(--brand-accent);
+  border: var(--border-width) solid var(--border-strong);
+  border-radius: var(--radius-pill);
+}
+
+.heroCardsImage {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
 .worlds {
