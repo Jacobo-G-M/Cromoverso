@@ -1,0 +1,93 @@
+.hero {
+  display: flex;
+  align-items: center;
+  background-color: var(--background-inverse);
+  gap: var(--spacing-3);
+  padding: var(--spacing-8) var(--spacing-7) var(--spacing-10)
+}
+
+.hero h1 {
+  color: var(--text-inverse);
+}
+
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.heroButtons {
+  display: flex;
+  gap: var(--spacing-3);
+}
+
+.heroNote {
+  display: flex;
+  gap: var(--spacing-2);
+  color: var(--text-tertiary)
+}
+
+.heroNote svg {
+  color: var(--brand-accent)
+}
+
+.worlds {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-8) var(--spacing-7) var(--spacing-6);
+  gap: var(--spacing-3);
+}
+
+.worldsHeader {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.worldsHeaderDescription {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.worldsHeaderDescription p {
+  color: var(--text-tertiary);
+}
+
+.worldsCards {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--spacing-3);
+}
+
+.worldCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  padding: var(--spacing-4);
+  border-radius: var(--radius-s);
+  border: var(--border-strong) solid var(--border-width);
+  box-shadow: var(--shadow-pop-small);
+}
+
+.cardTop {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.worldBadge {
+  border-radius: var(--radius-pill);
+  color: var(--status-warning);
+  background-color: var(--brand-accent-soft);
+  padding: var(--spacing-1) var(--spacing-2);
+}
+
+.world-neon   { background-color: var(--world-neon-soft); }
+.world-coral  { background-color: var(--world-coral-soft); }
+.world-bosque { background-color: var(--world-forest-soft); }
+.world-forja  { background-color: var(--world-forge-soft); }
+.world-orbita { background-color: var(--world-orbit-soft); }
+.world-niebla { background-color: var(--world-mist-soft); }
