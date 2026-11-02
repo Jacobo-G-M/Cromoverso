@@ -3,6 +3,7 @@ import { useTexts } from '../../hooks/useTexts';
 import Button from '../ui/Button/Button';
 import Input from '../ui/Input/Input';
 import Dropdown from '../ui/Dropdown/Dropdown';
+import Switch from '../ui/Switch/Switch';
 import BuscarIcon from '../../assets/icons/buscar.svg?react';
 import GloboIcon from '../../assets/icons/globo.svg?react'
 import ChevronAbajoIcon from '../../assets/icons/chevronabajo.svg?react'
@@ -10,20 +11,37 @@ import AccesibilidadIcon from '../../assets/icons/accesibilidad.svg?react'
 import LogoNormalIcon from '../../assets/logo/logo-normal.svg?react'
 import MenuIcon from '../../assets/icons/menu.svg?react'
 import CheckIcon from '../../assets/icons/check.svg?react'
+import CerrarIcon from '../../assets/icons/cerrar.svg?react'
 import styles from './Navbar.module.css'
 import MobileMenu from './MobileMenu';
+import PillSwitch from '../ui/PillSwitch/PillSwitch';
 
 const LINKS_TITLES = {
-  album: "/album",
-  intercambios: "/intercambios",
+  inicio: "/inicio",
   mundos: "/mundos",
-  ranking: "/ranking",
-  sobres: "/sobres",
 }
 
+
+// Navbar Component
 const Navbar = ({ texts, language, changeLanguage }) => {
+  // States
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuAccesibilityOpen, setIsMenuAccesibilityOpen] = useState(false);
+  const [textSize, setTextSize] = useState('Normal');
+  const [accesibilityToggles, setAccesibilityToggles] = useState({});
+
+  const handleResetAccesibility = () => {
+    setAccesibilityToggles({});
+    setTextSize('Normal')
+  }
+
   const nav = texts?.navbar;
+  const accesibility = texts?.accesibilidad;
+  const accesibilityHelp = Object.entries(accesibility ?? {})
+    .filter(([key, item]) => item?.titulo && item?.ayuda)
+    .map(([key, item]) => {
+      return { key, title: item.titulo, help: item.ayuda }
+    })
 
   const links = Object.entries(nav?.enlaces ?? {}).filter(([key]) => LINKS_TITLES[key])
 
@@ -49,60 +67,92 @@ const Navbar = ({ texts, language, changeLanguage }) => {
       </nav>
 
       <nav className={styles.navRight}>
-        {nav && (
-          <div className={styles.desktopOnly} style={{ maxWidth: "400px", flex: 1 }}>
-            <Input placeholder={nav?.buscador?.placeholder} icon={<BuscarIcon />} />
-          </div>
 
-        )}
         <div className={styles.desktopOnly}>
-          <Dropdown
-            trigger={<Button variant='secondary' className={styles.select}>
-              <GloboIcon />
-              {language.toUpperCase()}
-              <ChevronAbajoIcon />
-            </Button>}
-          >
-            <div className={styles.language}>
-              <span className='detail-label'>Idioma · Language</span>
-              <div className={`${styles.languageOption} ${language === "es" ? styles.langSelected : ""}`} onClick={() => changeLanguage('es')}>
-                <div>
-                  <p className='body-s-bold'>Español</p>
-                  <span className='detail-note'>lang="es-CO"</span>
-                </div>
-                <div className={styles.iconSelect}>
-                  {language === "es" && (<CheckIcon />)}
-                </div>
-              </div>
-              <div className={`${styles.languageOption} ${language === "en" ? styles.langSelected : ""}`} onClick={() => changeLanguage('en')}>
-                <div>
-                  <p className='body-s-bold'>English</p>
-                  <span className='detail-note'>lang="en"</span>
-                </div>
-                <div className={styles.iconSelect}>
-                  {language === "en" && (<CheckIcon />)}
-                </div>
-              </div>
-              <span className="detail-note" style={{ padding: "var(--spacing-1)" }}>
-                Se recuerda en este dispositivo con una cookie de preferencias
-              </span>
-            </div>
-          </Dropdown>
+          <PillSwitch
+            options={['ES', 'EN']}
+            value={language?.toUpperCase()}
+            onChange={(newLang) => changeLanguage(newLang.toLowerCase())}
+          />
         </div>
         <div className={styles.desktopOnly}>
-          <Button variant='secondary' size='s' circle={true}>
-            <AccesibilidadIcon />
-          </Button>
+          <Dropdown
+            isOpen={isMenuAccesibilityOpen}
+            onClose={() => setIsMenuAccesibilityOpen(false)}
+            trigger={
+              <Button variant='secondary' size='s' circle={true} onClick={() => setIsMenuAccesibilityOpen(!isMenuAccesibilityOpen)}>
+                <AccesibilidadIcon />
+              </Button>}
+          >
+            <section className={styles.accesibility}>
+              <div className={styles.accesibilityTitle}>
+                <h3 className="heading-h3">{accesibility?.titulo}</h3>
+                <Button circle={true} variant='ghost' size='m' onClick={() => setIsMenuAccesibilityOpen(false)}>
+                  <CerrarIcon />
+                </Button>
+              </div>
+              <div className={styles.accesibilityTextSize}>
+                <p className='body-m-bold'>{accesibility?.tamanoTexto?.titulo}</p>
+                <PillSwitch
+                  options={Object.values(accesibility?.tamanoTexto?.opciones ?? {})}
+                  value={textSize}
+                  onChange={setTextSize}
+                  shapeButton='rounded'
+                  border={false}
+                  fullWidth={true}
+                />
+              </div>
+              <div className={styles.accesibilityOptions}>
+                {accesibility && (
+                  accesibilityHelp.map((item, index) => (
+                    <div key={index} className={styles.accesibilityRow}>
+                      <div className={styles.accesibilityOptionLeft}>
+                        <p className={'body-m-bold'}>{item.title}</p>
+                        <p className={'body-s'} style={{ color: 'var(--text-secondary)' }}>{item.help}</p>
+                      </div>
+                      <div>
+                        <Switch 
+                          checked={!!accesibilityToggles[item.key]}
+                          onChange={(isChecked) => {
+                            setAccesibilityToggles(prev => ({
+                              ...prev,
+                              [item.key]: isChecked
+                            }))
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))
+                )}
+
+              </div>
+              <div className={styles.accesibilityRestart}>
+                <p 
+                  className={'body-s-bold'} 
+                  style={{ color: 'var(--brand-primary)', textDecoration: 'underline' }}
+                >
+                  {accesibility?.enlaces?.declaracion}
+                </p>
+                <Button 
+                  variant='secondary' 
+                  onClick={handleResetAccesibility}
+                  className={styles.resetButton}
+                >
+                    {accesibility?.botones?.restablecer}
+                </Button>
+              </div>
+            </section>
+          </Dropdown>
         </div>
         {nav && (
           <Button variant='secondary' size='s'>
-            {nav?.botones?.ingresar}
+            {nav?.botones?.ingresar ?? 'Ingresar'}
           </Button>
         )}
         {nav && (
           <div className={styles.desktopOnly}>
             <Button size='s'>
-              {nav?.botones?.crearCuenta}
+              {nav?.botones?.crearCuenta ?? "Crear cuenta"}
             </Button>
           </div>
         )}

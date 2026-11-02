@@ -5,32 +5,41 @@ const Dropdown = ({
   trigger,
   options = [],
   onSelect,
+  isOpen: controlledIsOpen,
+  onClose,
   children
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
+  const isControlled = controlledIsOpen !== undefined;
+  const showMenu = isControlled ? controlledIsOpen : isOpen;
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
+        if (isControlled) {
+          onClose?.()
+        } else {
+          setIsOpen(false);
+        }
       }
     };
 
-    if (isOpen) {
+    if (showMenu) {
       document.addEventListener("mousedown", handleClickOutside);
     }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside)
     };
-  }, [isOpen]);
+  }, [showMenu, isControlled, onClose]);
 
   return (
     <div ref={dropdownRef} className={styles.container}>
       <div onClick={() => setIsOpen(!isOpen)} className={`${styles.trigger} ${isOpen ? styles.active : ""}`}>
         {trigger}
       </div>
-      {isOpen && (
+      {showMenu && (
         <div className={styles.menu}>
           {children ? (
             children

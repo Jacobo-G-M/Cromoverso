@@ -1,44 +1,54 @@
 import { useEffect, useState } from "react";
 
 const API_URL = import.meta.env.VITE_API_URL;
-const KEYS_MENU = ["album", "sobres", "intercambios", "mundos", "ranking"]
 
-function validateTexts(data) {
+function validateTexts(data, sections = []) {
   const texts = data?.textos;
-  const nav = texts?.navbar;
 
-  const tags = [
-    nav?.logo?.texto,
-    nav?.logo?.aria,
-    ...KEYS_MENU.map((key) => nav?.enlaces?.[key]),
-    nav?.buscador?.placeholder,
-    nav?.buscador?.aria,
-    nav?.botones?.ingresar,
-    nav?.botones?.crearCuenta,
-    nav?.botones?.sobresDisponibles?.uno,
-    nav?.botones?.sobresDisponibles?.otro,
-    nav?.usuario?.menu,
-    nav?.usuario?.perfil,
-    nav?.usuario?.cerrarSesion,
-    nav?.aria?.idioma,
-    nav?.aria?.accesibilidad,
-    nav?.aria?.notificaciones,
-    nav?.aria?.notificacionesSinLeer?.uno,
-    nav?.aria?.notificacionesSinLeer?.otro
-  ];
-
-  if (!tags.every((value) => typeof value === "string" && value.trim())) {
-    throw new Error("Response does not contain navbar texts");
+  if (!texts || typeof texts !== "object") {
+    throw new Error("Invalid response: Texts not found")
   }
+
+  // const tags = [
+  //   nav?.logo?.texto,
+  //   nav?.logo?.aria,
+  //   nav?.enlaces?.inicio,
+  //   nav?.enlaces?.mundos,
+  //   nav?.buscador?.placeholder,
+  //   nav?.buscador?.aria,
+  //   nav?.botones?.ingresar,
+  //   nav?.botones?.crearCuenta,
+  //   nav?.botones?.sobresDisponibles?.uno,
+  //   nav?.botones?.sobresDisponibles?.otro,
+  //   nav?.usuario?.menu,
+  //   nav?.usuario?.perfil,
+  //   nav?.usuario?.cerrarSesion,
+  //   nav?.aria?.idioma,
+  //   nav?.aria?.accesibilidad,
+  //   nav?.aria?.notificaciones,
+  //   nav?.aria?.notificacionesSinLeer?.uno,
+  //   nav?.aria?.notificacionesSinLeer?.otro
+  // ];
+
+  const missing = sections.find((sec) => !data.textos[sec])
+  if (missing) {
+    throw new Error(`Missing requested section: ${missing}`)
+  }
+
+  // if (!tags.every((value) => typeof value === "string" && value.trim())) {
+  //   throw new Error("Response does not contain navbar texts");
+  // }
 
   return texts;
 }
 
-export function useTexts(language) {
+export function useTexts(language, sections = []) {
   const [texts, setTexts] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [tryText, setTryText] = useState(0);
+  const sectionsKey = sections.join(',');
+  
 
   useEffect(() => {
     const controller = new AbortController();
@@ -50,12 +60,14 @@ export function useTexts(language) {
 
     async function loadNavbarTexts() {
       try {
-        const result = await fetch(`${API_URL}/textos?idioma=${language}`, {
+        const sectionParam = sectionsKey ? `&seccion=${sectionsKey}` : '';
+        
+        const result = await fetch(`${API_URL}/textos?idioma=${language}${sectionParam}`, {
           signal: controller.signal,
         });
         if (!result.ok) throw new Error(`HTTP ${result.status}`)
         const data = await result.json();
-        const newTexts = validateTexts(data);
+        const newTexts = validateTexts(data, sections);
         if (current) setTexts(newTexts);
       } catch (error) {
         if (error.name === 'AbortError') return;
@@ -73,7 +85,7 @@ export function useTexts(language) {
       clearTimeout(limit);
       controller.abort();
     }
-  }, [language, tryText])
+  }, [language, sectionsKey, tryText])
 
   return {
     texts,
