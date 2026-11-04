@@ -4,7 +4,7 @@ import { useTexts } from './hooks/useTexts';
 
 const App = () => {
   const [language, setLanguage] = useState('es');
-  const data = useTexts(language);
+  const { texts, loading } = useTexts(language, ['navbar', 'accesibilidad']);
 
   useEffect(() => {
     document.documentElement.lang = language;
@@ -13,7 +13,7 @@ const App = () => {
   return (
     <div>
       <Navbar
-       texts={data.texts}
+       texts={texts}
        language={language}
        changeLanguage={setLanguage}
        />

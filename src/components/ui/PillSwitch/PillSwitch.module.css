@@ -1,9 +1,23 @@
 .container {
   display: inline-flex;
-  border: var(--border-width) solid var(--border-strong);
-  border-radius: var(--radius-pill);
   padding: 2px;
-  background-color: var(--background-surface);
+  background-color: var(--background-primary);
+}
+
+.isBorder {
+  border: var(--border-width) solid var(--border-strong);
+}
+
+.fullWidth {
+  display: flex;
+  width: 100%;
+  gap: var(--spacing-1);
+}
+
+.fullWidth .option {
+  flex: 1;
+  text-align: center;
+  
 }
 
 .option {
@@ -17,7 +31,15 @@
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 
+.pill {
+  border-radius: var(--radius-pill);
+}
+
+.rounded {
+  border-radius: var(--radius-s);
+}
+
 .active {
-  background-color: var(--background-inverse);
+  background-color: var(--brand-primary);
   color: var(--text-inverse);
 }

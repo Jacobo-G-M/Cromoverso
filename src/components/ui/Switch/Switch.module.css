@@ -1,0 +1,29 @@
+.track {
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border-radius: var(--radius-pill);
+  width: 44px;
+  height: 24px;
+  padding: 3px;
+  background-color: var(--background-inverse);
+  transition: background-color 0.2s ease;
+}
+
+.thumb {
+  width: 18px;
+  height: 18px;
+  background-color: var(--background-surface);
+  border-radius: 50%;
+  display: block;
+  transition: transform 0.2s ease;
+}
+
+.checked {
+  background-color: var(--brand-primary);
+}
+
+.checked .thumb {
+  transform: translateX(20px);
+}

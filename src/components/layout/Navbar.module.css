@@ -25,16 +25,57 @@
   min-width: 93px;
 }
 
-.language {
+.accesibility {
   display: flex;
   flex-direction: column;
-  padding: var(--spacing-3);
-  width: 240px;
+  padding: var(--spacing-5);
+  gap: var(--spacing-5);
+  width: 22.5rem;
+}
+
+.accesibilityTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.accesibilityTextSize {
+  display: flex;
+  flex-direction: column;
   gap: var(--spacing-2);
 }
 
-.language span {
-  color: var(--text-tertiary);
+.accesibilityOptions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  width: 100%;
+}
+
+.accesibilityRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: var(--spacing-3);
+}
+
+.accesibilityRestart {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: var(--spacing-3);
+}
+
+.accesibilityOptionLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.resetButton {
+  border-radius: var(--radius-s);
 }
 
 .iconCircle {
