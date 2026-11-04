@@ -1,0 +1,55 @@
+.footer {
+  padding: var(--spacing-8) var(--spacing-7) var(--spacing-6);
+  background-color: var(--background-inverse);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  color: var(--text-inverse-soft);
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border-inverse);
+  width: 100%
+}
+
+.footerTop {
+  display: flex;
+  justify-content: space-between;
+}
+
+.navColumns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-7);
+}
+
+.navColumns span {
+  color: var(--brand-accent);
+}
+
+.navColumns a {
+  color: var(--text-inverse);
+  text-decoration: none;
+}
+
+.navColumns a:hover {
+  color: var(--brand-accent);
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  text-decoration: none;
+}
+
+.footerBottom {
+  color: var(--text-inverse-soft);
+}
