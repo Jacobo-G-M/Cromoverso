@@ -3,10 +3,11 @@ import Navbar from './components/layout/Navbar'
 import Home from './views/Home';
 import { useTexts } from './hooks/useTexts';
 import Footer from './components/layout/Footer';
+import Card from './components/ui/Card/Card';
 
 const App = () => {
   const [language, setLanguage] = useState('es');
-  const { texts, loading } = useTexts(language, ['navbar', 'accesibilidad', 'paginas', 'footer']);
+  const { texts, loading } = useTexts(language, ['navbar', 'accesibilidad', 'paginas', 'footer', 'componentes']);
 
   useEffect(() => {
     document.documentElement.lang = language;

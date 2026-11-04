@@ -1,0 +1,167 @@
+.card {
+  background-color: var(--background-surface);
+  border: var(--border-width) solid var(--border-strong);
+  border-radius: var(--radius-s);
+  padding: var(--spacing-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-pop  );
+}
+
+.artArea {
+  border-radius: var(--radius-m);
+  position: relative;
+  overflow: hidden;
+}
+
+.holographic {
+  box-shadow: var(--shadow-pop-small), var(--glow-legendary);
+}
+
+.holographic:hover {
+  box-shadow: var(--shadow-pop), var(--glow-legendary);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  top: var(--spacing-2);
+  left: 0;
+  right: 0;
+  z-index: 1;
+  padding: 0 var(--spacing-2);
+}
+
+.characterImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.newBadge {
+  background-color: var(--brand-accent);
+  border: var(--border-width) solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  transform: rotate(-8deg);
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  z-index: 2;
+  padding: 2px 6px;
+  font-family: var(--font-rubik);
+  font-weight: 700;
+  font-size: 10px;
+  box-shadow: var(--shadow-pop-small);
+}
+
+.numberBadge {
+  background-color: var(--background-surface);
+  border: var(--border-width) solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-unbounded);
+}
+
+.rarityBadge {
+  background-color: var(--background-surface);
+  border: var(--border-width) solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+}
+
+.rarityBadge svg {
+  width: 13px;
+  height: 13px;
+}
+
+.rarity-legendaria svg {
+  color: var(--border-strong);
+  fill: var(--brand-accent);
+}
+
+.rarity-legendaria {
+  color: var(--rarity-legendary)
+}
+
+.rarity-epica {
+  color: var(--rarity-epic)
+}
+
+.rarity-rara {
+  color: var(--rarity-rare)
+}
+.rarity-comun {
+  color: var(--rarity-common)
+}
+
+
+.size-s {
+  border-radius: var(--radius-s);
+  padding: var(--spacing-1);
+}
+.size-s .numberBadge {
+  font-size: 10px;
+  padding: 1px 4px;
+}
+.size-s .rarityBadge svg {
+  width: 10px;
+  height: 10px;
+}
+
+.size-m {
+  border-radius: var(--radius-m);
+  padding: var(--spacing-2);
+}
+.size-m .numberBadge {
+  font-size: 11px;
+  padding: 2px 6px;
+}
+
+.size-l {
+  border-radius: var(--radius-l);
+  padding: var(--spacing-3);
+}
+.size-l .numberBadge {
+  font-size: 15px;
+  padding: 3px 10px;
+}
+.size-l .rarityBadge svg {
+  width: 16px;
+  height: 16px;
+}
+
+.world-neon   { 
+  background-color: var(--world-neon-soft); 
+}
+
+.world-coral  { 
+  background-color: var(--world-coral-soft); 
+}
+
+.world-bosque { 
+  background-color: var(--world-forest-soft); 
+}
+
+.world-forja  { 
+  background-color: var(--world-forge-soft); 
+}
+
+.world-orbita { 
+  background-color: var(--world-orbit-soft); 
+}
+
+.world-niebla { 
+  background-color: var(--world-mist-soft); 
+}
