@@ -23,7 +23,7 @@ const LINKS_TITLES = {
 
 
 // Navbar Component
-const Navbar = ({ texts, language, changeLanguage }) => {
+const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView }) => {
   // States
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMenuAccesibilityOpen, setIsMenuAccesibilityOpen] = useState(false);
@@ -53,16 +53,26 @@ const Navbar = ({ texts, language, changeLanguage }) => {
       {/* / Left component from navbar / */}
       <nav className={styles.navLeft}>
         {/* / Icon / */}
-        <a href="/">
+        <a href="/" onClick={(e) => {
+          e.preventDefault();
+          onNavigate('inicio');
+        }}>
           <LogoNormalIcon />
         </a>
         {/* / Links / */}
         {nav && (
           <>
-            <div className={styles.desktopOnly}>
+            <div className={`${styles.desktopOnly} ${styles.buttonsLink}`}>
               {
                 links.map(([key, tag]) => (
-                  <Button key={key} variant='ghost' size='s' href={key}>
+                  <Button
+                    className={currentView === key ? styles.activeLink : ''}
+                    key={key} 
+                    variant='ghost' 
+                    size='s' 
+                    href={`/${key}`} 
+                    onClick={(e) => {e.preventDefault(); onNavigate(key)}}
+                  >
                     {tag}
                   </Button>
                 ))
