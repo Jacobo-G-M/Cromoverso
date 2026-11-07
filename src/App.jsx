@@ -6,11 +6,12 @@ import Worlds from './views/Worlds';
 
 import { useTexts } from './hooks/useTexts';
 import Footer from './components/layout/Footer';
+import Card from './components/ui/Card/Card';
 
 const App = () => {
   const [currentView, setCurrentView] = useState('inicio')
   const [language, setLanguage] = useState('es');
-  const { texts, loading } = useTexts(language, ['navbar', 'accesibilidad', 'paginas', 'footer']);
+  const { texts, loading } = useTexts(language, ['navbar', 'accesibilidad', 'paginas', 'footer', 'componentes']);
 
   const handleNavigate = (view) => {
     setCurrentView(view);
