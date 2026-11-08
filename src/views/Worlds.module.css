@@ -1,0 +1,218 @@
+.worldsBanner {
+  background-color: var(--world-neon);
+  color: var(--text-inverse);
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-6-5) var(--spacing-7) var(--spacing-7);
+  gap: var(--spacing-3);
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb svg {
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+}
+
+.worldContent {
+  background-color: var(--background-surface);
+  padding: var(--spacing-6-5) var(--spacing-7) var(--spacing-8) var(--spacing-7);
+  display: grid;
+  grid-template-columns: 3fr 7fr;
+  gap: var(--spacing-6);
+}
+
+.worldsFilters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-5);
+}
+
+.filterWorlds {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-4);
+  gap: var(--spacing-4);
+  background-color: var(--background-surface);
+  border: var(--border-width) solid var(--border-strong);
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-pop);
+}
+
+.filterWorld {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  border: 0 solid transparent;
+  border-radius: var(--radius-m);
+  padding: var(--spacing-3);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  cursor: pointer;
+}
+
+.filterWorld:hover {
+  border: transparent;
+  background-color: var(--brand-inverse-hover);
+}
+
+.textWorldDescription {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.textWorld {
+  display: flex;
+  gap: var(--spacing-2);
+  align-items: center;
+}
+
+.circleWorld {
+  display: block;
+  border: var(--border-width-s) solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  width: 12px;
+  height: 12px;
+}
+
+.isCurrentWorld {
+  border-width: var(--border-strong);
+  border-style: solid;
+  border-radius: var(--radius-m);
+  padding: var(--spacing-3);
+}
+
+.rarityFilter {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-4);
+  gap: var(--spacing-4);
+  background-color: var(--background-surface);
+  border: var(--border-width) solid var(--border-strong);
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-pop);
+}
+
+.rarityList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2-5);
+}
+
+.rarityList svg {
+  width: 14px;
+  height: 14px;
+}
+
+.rarityRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: var(--spacing-1) var(--spacing-2);
+  border: var(--border-width) solid transparent;
+  border-radius: var(--radius-s);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.rarityRow:hover {
+  border: transparent;
+  border-radius: var(--radius-m);
+  background-color: var(--brand-inverse-hover);
+}
+
+.rarityBadge {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-1) var(--spacing-2);
+  border-width: var(--border-width);
+  border-style: solid;
+  border-radius: var(--radius-pill);
+}
+
+.badge-legendaria {
+  border-color: var(--rarity-legendary);
+  background-color: var(--rarity-legendary-soft);
+}
+
+.badge-legendaria svg {
+  color: var(--rarity-legendary);
+  fill: var(--rarity-legendary);
+}
+
+.badge-epica {
+  border-color: var(--rarity-epic);
+  background-color: var(--background-surface);
+}
+
+.badge-epica svg {
+  color: var(--rarity-epic);
+  fill: var(--rarity-epic);
+}
+
+.badge-rara {
+  background-color: var(--background-surface);
+  border-color: var(--rarity-rare);
+}
+
+.badge-rara svg {
+  color: var(--rarity-rare);
+  fill: var(--rarity-rare);
+}
+.badge-comun {
+  background-color: var(--background-surface);
+  border-color: var(--rarity-common);
+}
+
+.badge-comun svg {
+  color: var(--rarity-common);
+}
+
+.typeFilter {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-4);
+  gap: var(--spacing-2-5);
+  background-color: var(--background-surface);
+  border: var(--border-width) solid var(--border-strong);
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-pop);
+}
+
+.type {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-secondary);
+  padding: var(--spacing-1) var(--spacing-2);
+  border: var(--border-width) solid transparent;
+  border-radius: var(--radius-s);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  cursor: pointer;
+}
+
+.type:hover {
+  border: transparent;
+  border-radius: var(--radius-m);
+  background-color: var(--brand-inverse-hover);
+}
+
+.worldsCardsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-5);
+}
+
+.dropdownFilter {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.isActive {
+  background-color: var(--brand-inverse-hover);
+  border-color: var(--brand-primary);
+  color: var(--text-primary);
+}

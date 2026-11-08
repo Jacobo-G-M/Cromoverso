@@ -10,6 +10,7 @@
   --brand-primary-soft: #ede6ff;
   --brand-accent: #ffd23f;
   --brand-accent-soft: #fff3c4;
+  --brand-inverse-hover: #c9c1e8;
   --brand-pink: #ff4d7a;
   --text-primary: #1a1033;
   --text-secondary: #4a4166;
@@ -54,15 +55,18 @@
   --radius-pill: 999px;
   --spacing-1: 4px;
   --spacing-2: 8px;
+  --spacing-2-5: 10px;
   --spacing-3: 12px;
   --spacing-4: 16px;
   --spacing-5: 24px;
   --spacing-6: 32px;
+  --spacing-6-5: 40px;
   --spacing-7: 48px;
   --spacing-8: 56px;
   --spacing-9: 64px;
   --spacing-10: 72px;
   --border-width: 2px;
+  --border-width-s: 1.5px;
 
   /* Font families (Google Fonts) */
   --font-unbounded: 'Unbounded', system-ui, sans-serif;

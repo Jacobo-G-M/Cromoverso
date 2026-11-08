@@ -14,6 +14,11 @@
   gap: var(--spacing-6)
 }
 
+.buttonsLink {
+  display: flex;
+  gap: var(--spacing-2);
+}
+
 .navRight {
   display: flex;
   align-items: center;
@@ -118,6 +123,12 @@
 
 .mobileOnly {
   display: none !important;
+}
+
+.activeLink {
+  color: var(--text-inverse) !important;
+  background-color: var(--background-inverse) !important;
+  border-color: var(--border-strong) !important;
 }
 
 @media (max-width: 768px) {
