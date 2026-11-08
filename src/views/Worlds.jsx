@@ -5,8 +5,13 @@ import CoronaIcon from '../assets/icons/corona.svg?react'
 import EstrellaIcon from '../assets/icons/estrella.svg?react'
 import RomboIcon from '../assets/icons/rombo.svg?react'
 import CirculoIcon from '../assets/icons/circulo.svg?react'
+import ChevronAbajoIcon from '../assets/icons/chevronabajo.svg?react'
 
 import styles from './Worlds.module.css'
+
+import Dropdown from '../components/ui/Dropdown/Dropdown'
+import Button from '../components/ui/Button/Button'
+import { CardsGrid } from '../components/ui/CardsGrid/CardsGrid'
 
 const WORLD_ORDER = ['neon', 'coral', 'bosque', 'forja', 'orbita', 'niebla'];
 const RARITY_FILTERS = [
@@ -19,6 +24,11 @@ const RARITY_FILTERS = [
 const Worlds = ({ texts, onNavigate }) => {
   // useState for current world. Default value: neon.
   const [currentWorld, setCurrentWorld] = useState('neon');
+  // useState for sort menu button.
+  const [isSortMenuActive, setIsSortMenuActive] = useState(false);
+  //
+  const albumTexts = texts?.paginas?.albumMundo;
+  const cromoTexts = texts?.components?.cromo;
   // Get the current world
   const { mundos: world } = useMundos(currentWorld);
   // Get all the worlds
@@ -31,7 +41,7 @@ const Worlds = ({ texts, onNavigate }) => {
   ]
 
   // Text for banner. Describes the number of the current world and range of world's cards
-  const headerText = texts?.encabezado?.rango
+  const headerText = albumTexts?.encabezado?.rango
     ?.replace('{numero}', WORLD_ORDER.indexOf(currentWorld) + 1)
     .replace('{desde}',
       String(world?.numeros?.desde ?? '').padStart(3, '0')
@@ -44,7 +54,7 @@ const Worlds = ({ texts, onNavigate }) => {
       {/* Banner */}
       <div className={styles.worldsBanner}>
         <span className={`${styles.breadcrumb} body-s`}>
-          <p className='body-s-bold'>{texts?.migas?.inicio}</p>
+          <p className='body-s-bold'>{albumTexts?.migas?.inicio}</p>
           <ChevronDerIcon />
           <p>{world?.nombre}</p>
         </span>
@@ -55,7 +65,7 @@ const Worlds = ({ texts, onNavigate }) => {
       <div className={styles.worldContent}>
         <div className={styles.worldsFilters}>
           <div className={styles.filterWorlds}>
-            <h3 className="heading-h4">{texts?.mundos?.titulo ?? 'Mundos'}</h3>
+            <h3 className="heading-h4">{albumTexts?.mundos?.titulo ?? 'Mundos'}</h3>
             {worlds?.map((w) => {
               return (
                 <div
@@ -75,21 +85,22 @@ const Worlds = ({ texts, onNavigate }) => {
                     <p className="body-s-bold" style={
                       { color: `${w?.id === currentWorld ? `${w?.color}` : 'var(--text-secondary)'}` }}
                     >
-                      {texts?.mundos?.cromos?.replace('{cantidad}', w?.totalCromos) ?? `${w?.totalCromos} cromos`}
+                      {albumTexts?.mundos?.cromos?.replace('{cantidad}', w?.totalCromos) ?? `${w?.totalCromos} cromos`}
                     </p>
                   </span>
                   {currentWorld === w.id &&
                     <p
                       className='detail-note-bold' style={{ color: `${w?.color}` }}
                     >
-                      {texts?.mundos?.aria?.paginaActual ?? 'Página actual'}
+                      {albumTexts?.mundos?.aria?.paginaActual ?? 'Página actual'}
                     </p>
                   }
                 </div>
               )
-            })}</div>
+            })}
+          </div>
           <div className={styles.rarityFilter}>
-            <h3 className="heading-h4">{texts?.filtros?.rareza?.titulo ?? 'Filtrar por rareza'}</h3>
+            <h3 className="heading-h4">{albumTexts?.filtros?.rareza?.titulo ?? 'Filtrar por rareza'}</h3>
             <div className={styles.rarityList}>
               {RARITY_FILTERS.map(({ id, label, Icon }) => (
                 <div key={id} className={styles.rarityRow}>
@@ -105,30 +116,43 @@ const Worlds = ({ texts, onNavigate }) => {
                   </span>
                   <span className="body-s" style={{ color: 'var(--text-secondary)' }}>{
                     (world?.porRareza?.[id] ?? 0) > 1
-                      ? texts?.filtros?.cantidad?.otro?.replace('{cantidad}', world?.porRareza?.[id] ?? 0)
-                      : texts?.filtros?.cantidad?.uno?.replace('{cantidad}', world?.porRareza?.[id] ?? 0)}
+                      ? albumTexts?.filtros?.cantidad?.otro?.replace('{cantidad}', world?.porRareza?.[id] ?? 0)
+                      : albumTexts?.filtros?.cantidad?.uno?.replace('{cantidad}', world?.porRareza?.[id] ?? 0)}
                   </span>
                 </div>
               ))}
             </div>
           </div>
           <div className={styles.typeFilter}>
-            <h3 className="heading-h4">{texts?.filtros?.tipo?.titulo ?? 'Filtrar por tipo'}</h3>
+            <h3 className="heading-h4">{albumTexts?.filtros?.tipo?.titulo ?? 'Filtrar por tipo'}</h3>
             {TYPE_FILTERS.map(({ type, title, quantity }) => (
               <span key={type} className={`${styles.type}`}>
-                <p className="body-s-bold">{texts?.filtros?.tipo?.opciones?.[type] ?? title}</p>
+                <p className="body-s-bold">{albumTexts?.filtros?.tipo?.opciones?.[type] ?? title}</p>
                 <p className="body-s">
                   {
                     quantity > 1
-                      ? texts?.filtros?.cantidad?.otro?.replace('{cantidad}', quantity)
-                      : texts?.filtros?.cantidad?.uno?.replace('{cantidad}', quantity)
+                      ? albumTexts?.filtros?.cantidad?.otro?.replace('{cantidad}', quantity)
+                      : albumTexts?.filtros?.cantidad?.uno?.replace('{cantidad}', quantity)
                   }
                 </p>
               </span>
             ))}
           </div>
         </div>
-        <div className={styles.worldsCardsContainer}></div>
+        <div className={styles.worldsCardsContainer}>
+          <div className={styles.dropdownFilter}>
+            <Dropdown
+            trigger={
+              <Button variant='secondary' size='s' onClick={() => setIsSortMenuActive(!isSortMenuActive)}>
+                {albumTexts?.orden?.etiqueta?.replace('{orden}', albumTexts?.orden?.opciones?.numero)}
+                <ChevronAbajoIcon />
+              </Button>
+            }
+            options={['test1', 'test2']}
+          />
+          </div>
+          <CardsGrid texts={texts} cards={world?.cromos}/>
+        </div>
       </div>
     </>
   )

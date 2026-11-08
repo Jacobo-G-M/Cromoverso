@@ -38,7 +38,7 @@ const App = () => {
         )}
         {currentView === 'mundos' && (
           <Worlds
-            texts={texts?.paginas?.albumMundo}
+            texts={texts}
             onNavigate={handleNavigate}
           />
         )}

@@ -1,0 +1,9 @@
+.album {
+  border: var(--border-width) solid var(--border-strong);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-pop);
+  padding: var(--spacing-6);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--spacing-5);
+}

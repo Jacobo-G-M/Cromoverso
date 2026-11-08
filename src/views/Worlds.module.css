@@ -123,6 +123,7 @@
 
 .badge-legendaria svg {
   color: var(--rarity-legendary);
+  fill: var(--rarity-legendary);
 }
 
 .badge-epica {
@@ -131,6 +132,7 @@
 
 .badge-epica svg {
   color: var(--rarity-epic);
+  fill: var(--rarity-epic);
 }
 
 .badge-rara {
@@ -139,6 +141,7 @@
 
 .badge-rara svg {
   color: var(--rarity-rare);
+  fill: var(--rarity-rare);
 }
 .badge-comun {
   border-color: var(--rarity-common);
@@ -163,4 +166,15 @@
   display: flex;
   justify-content: space-between;
   color: var(--text-secondary);
+}
+
+.worldsCardsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-5);
+}
+
+.dropdownFilter {
+  display: flex;
+  justify-content: flex-end;
 }

@@ -21,3 +21,14 @@
   box-shadow: var(--glow-purple) !important;
   border-color: var(--border-strong) !important;
 }
+
+.defaultList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3);
+}
+
+.defaultItem {
+  cursor: pointer;
+}
