@@ -24,7 +24,7 @@ const Card = ({
 
   const albumTexts = texts?.paginas?.albumMundo;
   const cromoTexts = texts?.components?.cromo;
-  
+
   const formattedNumber = String(card?.numero ?? '').padStart(3, '0');
 
   const RARITY_ICONS = {
@@ -35,11 +35,11 @@ const Card = ({
   }
 
   const CARD_IMAGES = {
-  'neon': NeonHolographic,
-  'bosque': BosqueHolographic,
-  'coral': CoralHolographic,
-  'niebla': NieblaHolographic,
-};
+    'neon': NeonHolographic,
+    'bosque': BosqueHolographic,
+    'coral': CoralHolographic,
+    'niebla': NieblaHolographic,
+  };
 
   const characterSrc = (card?.rareza === 'legendaria' ? CARD_IMAGES[card?.mundo] : CommonCard) ?? NeonHolographic;
   const cardText = albumTexts?.tarjeta?.tipo
@@ -47,22 +47,22 @@ const Card = ({
     .replace('{tipo}',
       albumTexts?.filtros?.tipo?.opciones[card?.tipo]
     );
-  
+
 
   return (
-    <article 
+    <article
       className={`
         ${styles.card} 
         ${styles[`size-${size}`]}
         ${card?.holografico || card?.rareza === 'legendaria' ? styles.holographic : ''}
-      `} 
+      `}
       onClick={onClick}
     >
-      {isNew && 
-      <span className={styles.newBadge}>
-        {size === 's' ? cromoTexts?.estados?.nuevoExclamacion : cromoTexts?.estados?.nuevoExclamacion.toUpperCase() ?? '¡NUEVO!'}
-      </span>}
-      
+      {isNew &&
+        <span className={styles.newBadge}>
+          {size === 's' ? cromoTexts?.estados?.nuevoExclamacion : cromoTexts?.estados?.nuevoExclamacion.toUpperCase() ?? '¡NUEVO!'}
+        </span>}
+
       <div className={`${styles.artArea} ${styles[`world-${card?.mundo}`]}`}>
         <div className={styles.cardHeader}>
           <span className={`detail-note-bold ${styles.numberBadge}`}>
@@ -80,7 +80,10 @@ const Card = ({
           {card?.nombre}
         </h4>
         {size !== 's' && (
-          <p className="detail-note" style={{color: 'var(--text-secondary)'}}>
+          <p
+            className={`${styles.cardSubtitle} detail-note`}
+            style={{ color: 'var(--text-secondary)' }}
+          >
             {cardText}
           </p>
         )}

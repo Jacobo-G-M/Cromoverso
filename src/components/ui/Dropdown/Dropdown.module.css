@@ -32,3 +32,12 @@
 .defaultItem {
   cursor: pointer;
 }
+
+.align-left {
+  left: 0;
+  right: auto;
+}
+.align-right {
+  right: 0;
+  left: auto;
+}
