@@ -1,0 +1,26 @@
+.worldsBanner {
+  background-color: var(--world-neon);
+  color: var(--text-inverse);
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-6-5) var(--spacing-7) var(--spacing-7);
+  gap: var(--spacing-3);
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb svg {
+  width: var(--spacing-4);
+  height: var(--spacing-4);
+}
+
+.worldContent {
+  background-color: var(--background-surface);
+  padding: var(--spacing-6-5) var(--spacing-7) var(--spacing-8) var(--spacing-7);
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: var(--spacing-6);
+}

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export function useMundos() {
+export function useMundos(id) {
   const [mundos, setMundos] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -20,12 +20,12 @@ export function useMundos() {
     async function loadWorlds() {
       try {
         
-        const result = await fetch(`${API_URL}/mundos`, {
+        const result = await fetch(`${API_URL}/mundos${id ? `/${id}` : ''}`, {
           signal: controller.signal,
         });
         if (!result.ok) throw new Error(`HTTP ${result.status}`)
         const data = await result.json();
-        if (current) setMundos(data.datos);
+        if (current) setMundos(data.datos || data);
       } catch (error) {
         if (error.name === 'AbortError') return;
         console.error("Error loading the worlds: ", error);
@@ -42,7 +42,7 @@ export function useMundos() {
       clearTimeout(limit);
       controller.abort();
     }
-  }, [tryMundos])
+  }, [id, tryMundos])
 
   return {
     mundos,
