@@ -9,6 +9,7 @@ import GloboIcon from '../../assets/icons/globo.svg?react'
 import ChevronAbajoIcon from '../../assets/icons/chevronabajo.svg?react'
 import AccesibilidadIcon from '../../assets/icons/accesibilidad.svg?react'
 import LogoNormalIcon from '../../assets/logo/logo-normal.svg?react'
+import LogoInversoIcon from '../../assets/logo/logo-inverso.svg?react';
 import MenuIcon from '../../assets/icons/menu.svg?react'
 import CheckIcon from '../../assets/icons/check.svg?react'
 import CerrarIcon from '../../assets/icons/cerrar.svg?react'
@@ -29,7 +30,7 @@ const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView }) =>
   const [isMenuAccesibilityOpen, setIsMenuAccesibilityOpen] = useState(false);
   const [textSize, setTextSize] = useState('Normal');
   const [accesibilityToggles, setAccesibilityToggles] = useState({});
-  
+
 
   // Reset accesibility options
   const handleResetAccesibility = () => {
@@ -54,11 +55,13 @@ const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView }) =>
       {/* / Left component from navbar / */}
       <nav className={styles.navLeft}>
         {/* / Icon / */}
-        <a href="/" onClick={(e) => {
-          e.preventDefault();
-          onNavigate('inicio');
-        }}>
-          <LogoNormalIcon />
+        <a href="/" onClick={(e) => { e.preventDefault(); onNavigate('inicio'); }}>
+          <span className={styles.desktopOnly}>
+            <LogoNormalIcon />
+          </span>
+          <span className={styles.mobileOnly}>
+            <LogoInversoIcon />
+          </span>
         </a>
         {/* / Links / */}
         {nav && (
@@ -68,11 +71,11 @@ const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView }) =>
                 links.map(([key, tag]) => (
                   <Button
                     className={currentView === key ? styles.activeLink : ''}
-                    key={key} 
-                    variant='ghost' 
-                    size='s' 
-                    href={`/${key}`} 
-                    onClick={(e) => {e.preventDefault(); onNavigate(key)}}
+                    key={key}
+                    variant='ghost'
+                    size='s'
+                    href={`/${key}`}
+                    onClick={(e) => { e.preventDefault(); onNavigate(key) }}
                   >
                     {tag}
                   </Button>
@@ -164,7 +167,7 @@ const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView }) =>
             onChange={(newLang) => changeLanguage(newLang.toLowerCase())}
           />
         </div>
-          
+
         {/* / Log in button / */}
         <Button variant='secondary' size='s'>
           {nav?.botones?.ingresar ?? 'Ingresar'}
@@ -181,6 +184,7 @@ const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView }) =>
             variant='secondary'
             size='s'
             circle={true}
+            className={styles.menuButton}
             onClick={() => setIsMenuOpen(true)}
           >
             <MenuIcon />
