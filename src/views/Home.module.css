@@ -125,3 +125,73 @@
 .world-forja  { background-color: var(--world-forge-soft); }
 .world-orbita { background-color: var(--world-orbit-soft); }
 .world-niebla { background-color: var(--world-mist-soft); }
+
+.mobileOnly {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .desktopOnly {
+    display: none;
+  }
+
+  .mobileOnly {
+    display: block;
+    color: var(--text-inverse-soft);
+  }
+
+  .hero {
+    flex-direction: column;
+    padding: var(--spacing-7) var(--spacing-4) var(--spacing-8);
+    background-image: url('../assets/background/rayos-movil.png');
+    background-position: center top;
+    gap: var(--spacing-3);
+  }
+
+  .heroContent {
+    width: 100%;
+  }
+
+  .heroVisual {
+    display: none;
+  }
+
+  .heroButtons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .heroButtons button,
+  .heroButtons a {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .worlds {
+    padding: var(--spacing-6) var(--spacing-4);
+    gap: var(--spacing-4);
+  }
+
+  .worldsHeaderDescription p {
+    display: none;
+  }
+
+  .worldsCards {
+    display: flex;
+    overflow-x: auto;
+    gap: var(--spacing-3);
+    scroll-snap-type: x mandatory;
+    padding-bottom: var(--spacing-2);
+    scrollbar-width: none;
+  }
+
+  .worldsCards::-webkit-scrollbar {
+    display: none;
+  }
+
+  .worldCard {
+    flex: 0 0 155px;
+    scroll-snap-align: start;
+    border-radius: var(--radius-l);
+  }
+}

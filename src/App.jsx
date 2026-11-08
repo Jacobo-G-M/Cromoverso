@@ -10,11 +10,13 @@ import Card from './components/ui/Card/Card';
 
 const App = () => {
   const [currentView, setCurrentView] = useState('inicio')
+  const [selectedWorld, setSelectedWorld] = useState('neon');
   const [language, setLanguage] = useState('es');
   const { texts, loading } = useTexts(language, ['navbar', 'accesibilidad', 'paginas', 'footer', 'componentes']);
 
-  const handleNavigate = (view) => {
+  const handleNavigate = (view, worldId) => {
     setCurrentView(view);
+    if (worldId) setSelectedWorld(worldId);
     window.history.pushState({}, '', view === 'inicio' ? '/' : `/${view}`);
     window.scrollTo(0, 0);
   }
@@ -34,12 +36,13 @@ const App = () => {
       />
       <main>
         {currentView === 'inicio' && (
-          <Home texts={texts?.paginas?.inicio} />
+          <Home texts={texts?.paginas?.inicio} onNavigate={handleNavigate}/>
         )}
         {currentView === 'mundos' && (
           <Worlds
             texts={texts}
             onNavigate={handleNavigate}
+            initialWorld={selectedWorld}
           />
         )}
       </main>

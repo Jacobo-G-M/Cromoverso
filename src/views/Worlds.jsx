@@ -21,14 +21,14 @@ const RARITY_FILTERS = [
   { id: 'comun', label: 'COMÚN', Icon: CirculoIcon },
 ];
 
-const Worlds = ({ texts, onNavigate }) => {
+const Worlds = ({ texts, onNavigate, initialWorld = 'neon' }) => {
   const albumTexts = texts?.paginas?.albumMundo;
   const cromoTexts = texts?.components?.cromo;
   const sortOptionsDesktop = Object.values(albumTexts?.orden?.opciones ?? {})
     .map(item => item[0].toUpperCase() + item.slice(1));
 
   // useState for current world. Default value: neon.
-  const [currentWorld, setCurrentWorld] = useState('neon');
+  const [currentWorld, setCurrentWorld] = useState(initialWorld);
   // useState for sort menu button.
   const [isSortMenuActive, setIsSortMenuActive] = useState(false);
   //
