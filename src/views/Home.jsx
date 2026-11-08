@@ -108,7 +108,7 @@ const Home = ({ texts, onNavigate }) => {
               >
                 <div className={styles.cardTop}>
                   <div className={styles.worldIcon}>{Icon}</div>
-                  {selectedWorld === mundo.nombre && (
+                  {selectedWorld.nombre === mundo.nombre && (
                     <p className={`${styles.worldBadge} detail-note-bold`}>
                       {texts?.mundos?.etiquetas?.mundo?.replace('{numero}', index + 1)}
                     </p>

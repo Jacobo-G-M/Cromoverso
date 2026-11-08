@@ -7,3 +7,13 @@
   grid-template-columns: repeat(5, 1fr);
   gap: var(--spacing-5);
 }
+
+@media (max-width: 768px) {
+  .album {
+    grid-template-columns: repeat(3, 1fr);
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    gap: var(--spacing-2);
+  }
+}

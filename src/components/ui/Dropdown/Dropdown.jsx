@@ -7,6 +7,7 @@ const Dropdown = ({
   onSelect,
   isOpen: controlledIsOpen,
   onClose,
+  align = "right",
   children
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,7 +41,7 @@ const Dropdown = ({
         {trigger}
       </div>
       {showMenu && (
-        <div className={styles.menu}>
+        <div className={`${styles.menu} ${styles[`align-${align}`]}`}>
           {children ? (
             children
           ) : (

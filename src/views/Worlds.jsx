@@ -6,6 +6,8 @@ import EstrellaIcon from '../assets/icons/estrella.svg?react'
 import RomboIcon from '../assets/icons/rombo.svg?react'
 import CirculoIcon from '../assets/icons/circulo.svg?react'
 import ChevronAbajoIcon from '../assets/icons/chevronabajo.svg?react'
+import FlechaIzqIcon from '../assets/icons/flechaizq.svg?react';
+import BuscarIcon from '../assets/icons/buscar.svg?react';
 
 import styles from './Worlds.module.css'
 
@@ -53,6 +55,27 @@ const Worlds = ({ texts, onNavigate, initialWorld = 'neon' }) => {
     { type: 'villano', title: 'Villano', quantity: world?.cromos?.reduce((q, current) => current.tipo === 'villano' ? q + 1 : q, 0) },
   ]
 
+  const allRaritiesWord = albumTexts?.filtros?.rareza?.todas?.split(':')[1]?.trim() ?? 'todas';
+  const allRaritiesText = allRaritiesWord.charAt(0).toUpperCase() + allRaritiesWord.slice(1);
+  const allTypesWord = albumTexts?.filtros?.tipo?.todos?.split(':')[1]?.trim() ?? 'todos';
+  const allTypesText = allTypesWord.charAt(0).toUpperCase() + allTypesWord.slice(1);
+  const rarityOptions = [
+    allRaritiesText, // 👈 Ahora dirá solo "Todas"
+    ...RARITY_FILTERS.map(r => r.label)
+  ];
+  const typeOptions = [
+    allTypesText, // 👈 Ahora dirá solo "Todos"
+    ...TYPE_FILTERS.map(t => albumTexts?.filtros?.tipo?.opciones?.[t.type] ?? t.title)
+  ];
+
+  const currentRarityLabel = selectedRarity
+    ? (albumTexts?.filtros?.rareza?.valor?.replace('{rareza}', RARITY_FILTERS.find(r => r.id === selectedRarity)?.label ?? selectedRarity))
+    : (albumTexts?.filtros?.rareza?.todas ?? 'Rareza: todas');
+
+  const currentTypeLabel = selectedType
+    ? (albumTexts?.filtros?.tipo?.valor?.replace('{tipo}', albumTexts?.filtros?.tipo?.opciones?.[selectedType] ?? selectedType))
+    : (albumTexts?.filtros?.tipo?.todos ?? 'Tipo: todos');
+
   // Text for banner. Describes the number of the current world and range of world's cards
   const headerText = albumTexts?.encabezado?.rango
     ?.replace('{numero}', WORLD_ORDER.indexOf(currentWorld) + 1)
@@ -65,14 +88,44 @@ const Worlds = ({ texts, onNavigate, initialWorld = 'neon' }) => {
   return (
     <>
       {/* Banner */}
-      <div className={styles.worldsBanner}>
-        <span className={`${styles.breadcrumb} body-s`}>
-          <p className='body-s-bold'>{albumTexts?.migas?.inicio}</p>
-          <ChevronDerIcon />
-          <p>{world?.nombre}</p>
-        </span>
-        <h1 className="heading-display">{world?.nombre}</h1>
-        <span className={`${styles['header-text']} body-l`}>{headerText}</span>
+      <div className={styles.worldsBanner} style={{ backgroundColor: world?.color }}>
+        {/* Desktop version */}
+        <div className={styles.desktopOnly}>
+          <span className={`${styles.breadcrumb} body-s`}>
+            <p className='body-s-bold'>{albumTexts?.migas?.inicio}</p>
+            <ChevronDerIcon />
+            <p>{world?.nombre}</p>
+          </span>
+          <h1 className="heading-display">{world?.nombre}</h1>
+          <span className={`${styles['header-text']} body-l`}>{headerText}</span>
+        </div>
+        {/* Versión Móvil */}
+        <div className={styles.mobileHeader}>
+          <Button
+            variant="secondary"
+            circle={true}
+            size="s"
+            className={styles.bannerButton}
+            onClick={() => onNavigate('inicio')}
+          >
+            <FlechaIzqIcon />
+          </Button>
+
+          <div className={styles.mobileHeaderText}>
+            <h1 className="heading-h3">{world?.nombre}</h1>
+            <p className="detail-note" style={{ color: 'var(--text-inverse-soft)' }}>
+              {world?.descripcion}
+            </p>
+          </div>
+          <Button
+            variant="secondary"
+            circle={true}
+            size="s"
+            className={styles.bannerButton}
+          >
+            <BuscarIcon />
+          </Button>
+        </div>
       </div>
       {/* Container to show the content of this view */}
       <div className={styles.worldContent}>
@@ -175,6 +228,44 @@ const Worlds = ({ texts, onNavigate, initialWorld = 'neon' }) => {
                 </Button>
               }
               options={sortOptionsDesktop}
+            />
+          </div>
+          <div className={styles.mobileFilters}>
+            <Dropdown
+              align="left"
+              trigger={
+                <Button variant="secondary" size="s">
+                  {currentRarityLabel}
+                  <ChevronAbajoIcon />
+                </Button>
+              }
+              options={rarityOptions}
+              onSelect={(label) => {
+                if (label === allRaritiesText) {
+                  setSelectedRarity(null);
+                } else {
+                  const match = RARITY_FILTERS.find(r => r.label === label);
+                  setSelectedRarity(match ? match.id : null);
+                }
+              }}
+            />
+            <Dropdown
+              align="left"
+              trigger={
+                <Button variant="secondary" size="s">
+                  {currentTypeLabel}
+                  <ChevronAbajoIcon />
+                </Button>
+              }
+              options={typeOptions}
+              onSelect={(title) => {
+                if (title === allTypesText) {
+                  setSelectedType(null);
+                } else {
+                  const match = TYPE_FILTERS.find(t => (albumTexts?.filtros?.tipo?.opciones?.[t.type] ?? t.title) === title);
+                  setSelectedType(match ? match.type : null);
+                }
+              }}
             />
           </div>
           <CardsGrid texts={texts} cards={displayedCards} />
