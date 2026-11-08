@@ -49,6 +49,67 @@ const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView }) =>
 
   const links = Object.entries(nav?.enlaces ?? {}).filter(([key]) => LINKS_TITLES[key])
 
+  const accessibilityPanel = (
+    <section className={styles.accesibility}>
+      <div className={styles.accesibilityTitle}>
+        <h3 className="heading-h3">{accesibility?.titulo}</h3>
+        <Button circle={true} variant='ghost' size='m' onClick={() => setIsMenuAccesibilityOpen(false)}>
+          <CerrarIcon />
+        </Button>
+      </div>
+      <div className={styles.accesibilityTextSize}>
+        <p className='body-m-bold'>{accesibility?.tamanoTexto?.titulo}</p>
+        <PillSwitch
+          options={Object.values(accesibility?.tamanoTexto?.opciones ?? {})}
+          value={textSize}
+          onChange={setTextSize}
+          shapeButton='rounded'
+          border={false}
+          fullWidth={true}
+        />
+      </div>
+      <div className={styles.accesibilityOptions}>
+        {accesibility && (
+          accesibilityHelp.map((item, index) => (
+            <div key={index} className={styles.accesibilityRow}>
+              <div className={styles.accesibilityOptionLeft}>
+                <p className={'body-m-bold'}>{item.title}</p>
+                <p className={'body-s'} style={{ color: 'var(--text-secondary)' }}>{item.help}</p>
+              </div>
+              <div>
+                <Switch
+                  checked={!!accesibilityToggles[item.key]}
+                  onChange={(isChecked) => {
+                    setAccesibilityToggles(prev => ({
+                      ...prev,
+                      [item.key]: isChecked
+                    }))
+                  }}
+                />
+              </div>
+            </div>
+          ))
+        )}
+
+      </div>
+      <div className={styles.accesibilityRestart}>
+        <p
+          className={'body-s-bold'}
+          style={{ color: 'var(--brand-primary)', textDecoration: 'underline' }}
+        >
+          {accesibility?.enlaces?.declaracion}
+        </p>
+        <Button
+          variant='secondary'
+          onClick={handleResetAccesibility}
+          className={styles.resetButton}
+        >
+          {accesibility?.botones?.restablecer}
+        </Button>
+      </div>
+    </section>
+  );
+
   return (
     // Navbar
     <header className={styles.navbar}>
@@ -98,64 +159,7 @@ const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView }) =>
                   <AccesibilidadIcon />
                 </Button>}
             >
-              <section className={styles.accesibility}>
-                <div className={styles.accesibilityTitle}>
-                  <h3 className="heading-h3">{accesibility?.titulo}</h3>
-                  <Button circle={true} variant='ghost' size='m' onClick={() => setIsMenuAccesibilityOpen(false)}>
-                    <CerrarIcon />
-                  </Button>
-                </div>
-                <div className={styles.accesibilityTextSize}>
-                  <p className='body-m-bold'>{accesibility?.tamanoTexto?.titulo}</p>
-                  <PillSwitch
-                    options={Object.values(accesibility?.tamanoTexto?.opciones ?? {})}
-                    value={textSize}
-                    onChange={setTextSize}
-                    shapeButton='rounded'
-                    border={false}
-                    fullWidth={true}
-                  />
-                </div>
-                <div className={styles.accesibilityOptions}>
-                  {accesibility && (
-                    accesibilityHelp.map((item, index) => (
-                      <div key={index} className={styles.accesibilityRow}>
-                        <div className={styles.accesibilityOptionLeft}>
-                          <p className={'body-m-bold'}>{item.title}</p>
-                          <p className={'body-s'} style={{ color: 'var(--text-secondary)' }}>{item.help}</p>
-                        </div>
-                        <div>
-                          <Switch
-                            checked={!!accesibilityToggles[item.key]}
-                            onChange={(isChecked) => {
-                              setAccesibilityToggles(prev => ({
-                                ...prev,
-                                [item.key]: isChecked
-                              }))
-                            }}
-                          />
-                        </div>
-                      </div>
-                    ))
-                  )}
-
-                </div>
-                <div className={styles.accesibilityRestart}>
-                  <p
-                    className={'body-s-bold'}
-                    style={{ color: 'var(--brand-primary)', textDecoration: 'underline' }}
-                  >
-                    {accesibility?.enlaces?.declaracion}
-                  </p>
-                  <Button
-                    variant='secondary'
-                    onClick={handleResetAccesibility}
-                    className={styles.resetButton}
-                  >
-                    {accesibility?.botones?.restablecer}
-                  </Button>
-                </div>
-              </section>
+              {accessibilityPanel}
             </Dropdown>
           </div>
         </div>
@@ -199,7 +203,25 @@ const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView }) =>
         language={language}
         changeLanguage={changeLanguage}
         onNavigate={onNavigate}
+        onOpenAccessibility={() => {
+          setIsMenuOpen(false);
+          setIsMenuAccesibilityOpen(true);
+        }}
       />
+      {isMenuAccesibilityOpen && (
+        <div 
+          className={`${styles.mobileAccessibilityOverlay} ${styles.mobileOnly}`}
+          onClick={() => setIsMenuAccesibilityOpen(false)}
+        >
+          <div 
+            className={styles.mobileAccessibilitySheet}
+            onClick={(e) => e.stopPropagation()}
+            onMouseDown={(e) => {e.stopPropagation()}}
+          >
+            {accessibilityPanel}
+          </div>
+        </div>
+      )}
     </header>
   )
 }

@@ -18,6 +18,9 @@ const Dropdown = ({
 
   useEffect(() => {
     const handleClickOutside = (event) => {
+      if (dropdownRef.current && dropdownRef.current.offsetParent === null) {
+        return;
+      }
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         if (isControlled) {
           onClose?.()
