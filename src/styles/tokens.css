@@ -54,6 +54,7 @@
   --radius-pill: 999px;
   --spacing-1: 4px;
   --spacing-2: 8px;
+  --spacing-2-5: 10px;
   --spacing-3: 12px;
   --spacing-4: 16px;
   --spacing-5: 24px;
@@ -64,6 +65,7 @@
   --spacing-9: 64px;
   --spacing-10: 72px;
   --border-width: 2px;
+  --border-width-s: 1.5px;
 
   /* Font families (Google Fonts) */
   --font-unbounded: 'Unbounded', system-ui, sans-serif;
