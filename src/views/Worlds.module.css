@@ -47,8 +47,15 @@
   flex-direction: column;
   gap: var(--spacing-1);
   border: 0 solid transparent;
+  border-radius: var(--radius-m);
   padding: var(--spacing-3);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
   cursor: pointer;
+}
+
+.filterWorld:hover {
+  border: transparent;
+  background-color: var(--brand-inverse-hover);
 }
 
 .textWorldDescription {
@@ -104,6 +111,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  cursor: pointer;
+  padding: var(--spacing-1) var(--spacing-2);
+  border: var(--border-width) solid transparent;
+  border-radius: var(--radius-s);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.rarityRow:hover {
+  border: transparent;
+  border-radius: var(--radius-m);
+  background-color: var(--brand-inverse-hover);
 }
 
 .rarityBadge {
@@ -128,6 +146,7 @@
 
 .badge-epica {
   border-color: var(--rarity-epic);
+  background-color: var(--background-surface);
 }
 
 .badge-epica svg {
@@ -136,6 +155,7 @@
 }
 
 .badge-rara {
+  background-color: var(--background-surface);
   border-color: var(--rarity-rare);
 }
 
@@ -144,6 +164,7 @@
   fill: var(--rarity-rare);
 }
 .badge-comun {
+  background-color: var(--background-surface);
   border-color: var(--rarity-common);
 }
 
@@ -166,6 +187,17 @@
   display: flex;
   justify-content: space-between;
   color: var(--text-secondary);
+  padding: var(--spacing-1) var(--spacing-2);
+  border: var(--border-width) solid transparent;
+  border-radius: var(--radius-s);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  cursor: pointer;
+}
+
+.type:hover {
+  border: transparent;
+  border-radius: var(--radius-m);
+  background-color: var(--brand-inverse-hover);
 }
 
 .worldsCardsContainer {
@@ -177,4 +209,10 @@
 .dropdownFilter {
   display: flex;
   justify-content: flex-end;
+}
+
+.isActive {
+  background-color: var(--brand-inverse-hover);
+  border-color: var(--brand-primary);
+  color: var(--text-primary);
 }

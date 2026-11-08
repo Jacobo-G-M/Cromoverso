@@ -22,17 +22,30 @@ const RARITY_FILTERS = [
 ];
 
 const Worlds = ({ texts, onNavigate }) => {
+  const albumTexts = texts?.paginas?.albumMundo;
+  const cromoTexts = texts?.components?.cromo;
+  const sortOptionsDesktop = Object.values(albumTexts?.orden?.opciones ?? {})
+    .map(item => item[0].toUpperCase() + item.slice(1));
+
   // useState for current world. Default value: neon.
   const [currentWorld, setCurrentWorld] = useState('neon');
   // useState for sort menu button.
   const [isSortMenuActive, setIsSortMenuActive] = useState(false);
   //
-  const albumTexts = texts?.paginas?.albumMundo;
-  const cromoTexts = texts?.components?.cromo;
+  const [sortOption, setSortOption] = useState(sortOptionsDesktop[0]);
+  // useState for the selected rarity filter
+  const [selectedRarity, setSelectedRarity] = useState(null);
+  // useState for the selected rarity filter
+  const [selectedType, setSelectedType] = useState(null);
   // Get the current world
   const { mundos: world } = useMundos(currentWorld);
   // Get all the worlds
   const { mundos: worlds } = useMundos();
+  const displayedCards = world?.cromos?.filter((c) => {
+    const matchesRarity = selectedRarity ? c.rareza === selectedRarity : true;
+    const matchesType = selectedType ? c.tipo === selectedType : true;
+    return matchesRarity && matchesType;
+  });
 
   const TYPE_FILTERS = [
     { type: 'heroe', title: 'Héroe', quantity: world?.cromos?.reduce((q, current) => current.tipo === 'heroe' ? q + 1 : q, 0) },
@@ -103,7 +116,14 @@ const Worlds = ({ texts, onNavigate }) => {
             <h3 className="heading-h4">{albumTexts?.filtros?.rareza?.titulo ?? 'Filtrar por rareza'}</h3>
             <div className={styles.rarityList}>
               {RARITY_FILTERS.map(({ id, label, Icon }) => (
-                <div key={id} className={styles.rarityRow}>
+                <div
+                  key={id}
+                  className={`
+                    ${styles.rarityRow} 
+                    ${selectedRarity === id ? styles.isActive : ''}
+                  `}
+                  onClick={() => setSelectedRarity(selectedRarity === id ? null : id)}
+                >
                   <span
                     className={`${styles.rarityBadge}
                     ${styles[`badge-${id}`]}
@@ -126,7 +146,13 @@ const Worlds = ({ texts, onNavigate }) => {
           <div className={styles.typeFilter}>
             <h3 className="heading-h4">{albumTexts?.filtros?.tipo?.titulo ?? 'Filtrar por tipo'}</h3>
             {TYPE_FILTERS.map(({ type, title, quantity }) => (
-              <span key={type} className={`${styles.type}`}>
+              <span
+                key={type}
+                className={`
+                  ${styles.type} 
+                  ${selectedType === type ? styles.isActive : ''}
+                `}
+                onClick={() => setSelectedType(selectedType === type ? null : type)}>
                 <p className="body-s-bold">{albumTexts?.filtros?.tipo?.opciones?.[type] ?? title}</p>
                 <p className="body-s">
                   {
@@ -142,16 +168,16 @@ const Worlds = ({ texts, onNavigate }) => {
         <div className={styles.worldsCardsContainer}>
           <div className={styles.dropdownFilter}>
             <Dropdown
-            trigger={
-              <Button variant='secondary' size='s' onClick={() => setIsSortMenuActive(!isSortMenuActive)}>
-                {albumTexts?.orden?.etiqueta?.replace('{orden}', albumTexts?.orden?.opciones?.numero)}
-                <ChevronAbajoIcon />
-              </Button>
-            }
-            options={['test1', 'test2']}
-          />
+              trigger={
+                <Button variant='secondary' size='s' onClick={() => setIsSortMenuActive(!isSortMenuActive)}>
+                  {albumTexts?.orden?.etiqueta?.replace('{orden}', sortOption.toLowerCase())}
+                  <ChevronAbajoIcon />
+                </Button>
+              }
+              options={sortOptionsDesktop}
+            />
           </div>
-          <CardsGrid texts={texts} cards={world?.cromos}/>
+          <CardsGrid texts={texts} cards={displayedCards} />
         </div>
       </div>
     </>
