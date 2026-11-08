@@ -12,7 +12,7 @@ const App = () => {
   const [currentView, setCurrentView] = useState('inicio')
   const [selectedWorld, setSelectedWorld] = useState('neon');
   const [language, setLanguage] = useState('es');
-  const { texts, loading } = useTexts(language, ['navbar', 'accesibilidad', 'paginas', 'footer', 'componentes']);
+  const { texts, loading } = useTexts(language, ['navbar', 'accesibilidad', 'paginas', 'footer', 'componentes', 'menuMovil']);
 
   const handleNavigate = (view, worldId) => {
     setCurrentView(view);

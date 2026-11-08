@@ -17,21 +17,21 @@ import styles from './MobileMenu.module.css'
 import Button from '../ui/Button/Button'
 import PillSwitch from '../ui/PillSwitch/PillSwitch'
 
-const MobileMenu = ({ isOpen, onClose, language, changeLanguage }) => {
+const MobileMenu = ({ texts, isOpen, onClose, language, changeLanguage, onNavigate }) => {
   if (!isOpen) return null;
 
   const navItems = [
-    { label: 'Inicio', icon: <InicioIcon /> },
-    { label: 'Álbum', icon: <AlbumIcon /> },
-    { label: 'Sobres', icon: <SobreIcon /> },
-    { label: 'Intercambios', icon: <IntercambioIcon /> },
-    { label: 'Mundos', icon: <MundoIcon /> },
-    { label: 'Ranking', icon: <TrofeoIcon /> },
+    { label: 'Inicio', icon: <InicioIcon />, link: 'inicio'},
+    // { label: 'Álbum', icon: <AlbumIcon /> },
+    // { label: 'Sobres', icon: <SobreIcon /> },
+    // { label: 'Intercambios', icon: <IntercambioIcon /> },
+    { label: 'Mundos', icon: <MundoIcon />, link: 'mundos', worldId: 'neon'},
+    // { label: 'Ranking', icon: <TrofeoIcon /> },
     // { label: 'Mi colección', icon: <CartasIcon /> },
     // { label: 'Perfil y logros', icon: <UsuarioIcon /> },
     // { label: 'Notificaciones', icon: <CampanaIcon /> },
   ]
-
+  
   return (
     <main className={styles.overlay}>
       <header className={styles.header}>
@@ -46,11 +46,15 @@ const MobileMenu = ({ isOpen, onClose, language, changeLanguage }) => {
             <button
               key={index}
               className={`${styles.navItem} body-m-bold`}
-              onClick={onClose}
+              onClick={(e) => {
+                e.preventDefault()
+                onClose();
+                onNavigate(item.link, item.worldId);
+              }}
             >
               <div className={styles.itemLeft}>
                 {item.icon}
-                <span className={styles.itemLabel}>{item.label}</span>
+                <span className={styles.itemLabel}>{texts?.enlaces[item.label.toLowerCase()]}</span>
               </div>
               <ChevronDerIcon className={styles.chevron} />
             </button>
@@ -62,7 +66,7 @@ const MobileMenu = ({ isOpen, onClose, language, changeLanguage }) => {
         <div className={styles.navItem}>
           <div className={`${styles.itemLeft} body-m-bold`}>
             <GloboIcon />
-            Idioma
+            {texts?.secciones?.idioma ?? 'Idioma'}
           </div>
           <PillSwitch 
             options={['ES', 'EN']} 
@@ -73,17 +77,17 @@ const MobileMenu = ({ isOpen, onClose, language, changeLanguage }) => {
         <button className={styles.navItem} onClick={onClose}>
           <div className={`${styles.itemLeft} body-m-bold`}>
             <AccesibilidadIcon />
-            Accesibilidad
+            {texts?.secciones?.accesibilidad ?? 'Accesibilidad'}
           </div>
           <ChevronDerIcon className={styles.chevron} />
         </button>
         <hr className={styles.dividerAccount} />
         <div className={styles.account}>
           <Button variant='secondary' size='m'>
-            Ingresar
+            {texts?.botones?.ingresar ?? 'Ingresar'}
           </Button>
           <Button size='m'>
-            Crear cuenta
+            {texts?.botones?.crearCuenta ?? 'Crear cuenta'}
           </Button>
         </div>
       </section>
