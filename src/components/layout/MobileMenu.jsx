@@ -17,21 +17,29 @@ import styles from './MobileMenu.module.css'
 import Button from '../ui/Button/Button'
 import PillSwitch from '../ui/PillSwitch/PillSwitch'
 
-const MobileMenu = ({ texts, isOpen, onClose, language, changeLanguage, onNavigate }) => {
+const MobileMenu = ({ 
+  texts, 
+  isOpen, 
+  onClose, 
+  language, 
+  changeLanguage, 
+  onNavigate,
+  onOpenAccessibility
+}) => {
   if (!isOpen) return null;
 
   const navItems = [
-    { label: 'Inicio', icon: <InicioIcon />, link: 'inicio'},
+    { label: 'Inicio', icon: <InicioIcon />, link: 'inicio' },
     // { label: 'Álbum', icon: <AlbumIcon /> },
     // { label: 'Sobres', icon: <SobreIcon /> },
     // { label: 'Intercambios', icon: <IntercambioIcon /> },
-    { label: 'Mundos', icon: <MundoIcon />, link: 'mundos', worldId: 'neon'},
+    { label: 'Mundos', icon: <MundoIcon />, link: 'mundos', worldId: 'neon' },
     // { label: 'Ranking', icon: <TrofeoIcon /> },
     // { label: 'Mi colección', icon: <CartasIcon /> },
     // { label: 'Perfil y logros', icon: <UsuarioIcon /> },
     // { label: 'Notificaciones', icon: <CampanaIcon /> },
   ]
-  
+
   return (
     <main className={styles.overlay}>
       <header className={styles.header}>
@@ -68,19 +76,20 @@ const MobileMenu = ({ texts, isOpen, onClose, language, changeLanguage, onNaviga
             <GloboIcon />
             {texts?.secciones?.idioma ?? 'Idioma'}
           </div>
-          <PillSwitch 
-            options={['ES', 'EN']} 
-            value={language?.toUpperCase()} 
+          <PillSwitch
+            options={['ES', 'EN']}
+            value={language?.toUpperCase()}
             onChange={(newLang) => changeLanguage(newLang.toLowerCase())}
           />
         </div>
-        <button className={styles.navItem} onClick={onClose}>
+        <div className={styles.navItem} onClick={onClose}>
           <div className={`${styles.itemLeft} body-m-bold`}>
-            <AccesibilidadIcon />
             {texts?.secciones?.accesibilidad ?? 'Accesibilidad'}
           </div>
-          <ChevronDerIcon className={styles.chevron} />
-        </button>
+          <Button variant='secondary' size='s' circle={true} onClick={onOpenAccessibility}>
+            <AccesibilidadIcon />
+          </Button>
+        </div>
         <hr className={styles.dividerAccount} />
         <div className={styles.account}>
           <Button variant='secondary' size='m'>

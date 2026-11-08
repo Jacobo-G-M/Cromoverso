@@ -155,4 +155,36 @@
   .navRight {
     gap: var(--spacing-2);
   }
+
+    .mobileAccessibilityOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(26, 16, 51, 0.6);
+    z-index: 150;
+    display: flex;
+    align-items: flex-end; /* Lo alinea abajo */
+    justify-content: center;
+  }
+  .mobileAccessibilitySheet {
+    width: 100%;
+    max-height: 85vh;
+    background-color: var(--background-page);
+    border-top: var(--border-width) solid var(--border-strong);
+    border-top-left-radius: var(--radius-xl);
+    border-top-right-radius: var(--radius-xl);
+    box-shadow: var(--shadow-floating);
+    overflow-y: auto;
+    animation: slideUp 0.25s ease-out;
+  }
+  .mobileAccessibilitySheet .accesibility {
+    width: 100%;
+    padding: var(--spacing-5);
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
 }
