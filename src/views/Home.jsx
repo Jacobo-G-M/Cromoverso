@@ -20,7 +20,7 @@ import Button from '../components/ui/Button/Button'
 
 const Home = ({ texts, onNavigate }) => {
   const { mundos, loading, error } = useMundos();
-  const [selectedWorld, setSelectedWorld] = useState('Ciudad Neón')
+  const [selectedWorld, setSelectedWorld] = useState({id: 'neon', nombre: 'Ciudad Neón'})
 
 
   const WORLD_ICONS = {
@@ -37,17 +37,25 @@ const Home = ({ texts, onNavigate }) => {
       <section className={styles.hero}>
         <div className={styles.heroContent}>
           <h1 className="heading-display">{texts?.hero?.titulo ?? 'Seis mundos. 120 héroes. Un álbum tuyo.'}</h1>
+          <p className={`${styles.mobileOnly} body-m`}>
+            {texts?.hero?.subtituloMovil}
+          </p>
           <div className={styles.heroButtons}>
-            <Button variant='accent' size='l'>
-              <RegaloIcon />
+            <Button variant='accent' size='l' className='body-m-bold'>
+              <span className={styles.desktopOnly}>
+                <RegaloIcon />
+              </span>
               {texts?.hero?.botones?.crearCuentaGratis ?? 'Crear cuenta gratis'}
             </Button>
-            <Button variant='secondary' size='l'>
-              <AlbumIcon />
+            <Button variant='secondary' size='l' className='body-m-bold'>
+              <span className={styles.desktopOnly}>
+                <AlbumIcon />
+              </span>
+
               {texts?.hero?.botones?.explorarMundos ?? 'Explorar los mundos'}
             </Button>
           </div>
-          <div className={styles.heroNote}>
+          <div className={`${styles.heroNote} ${styles.desktopOnly}`}>
             <DestellosIcon />
             <p className='body-s'>
               {texts?.hero?.subtitulo}
@@ -61,9 +69,9 @@ const Home = ({ texts, onNavigate }) => {
               {texts?.hero?.etiquetas?.guardiana ?? 'Guardiana holográfica'}
             </span>
           </div>
-          <img 
-            src={abanicoCromos} 
-            alt="Abanico de cromos" 
+          <img
+            src={abanicoCromos}
+            alt="Abanico de cromos"
             className={styles.heroCardsImage}
           />
         </div>
@@ -76,9 +84,16 @@ const Home = ({ texts, onNavigate }) => {
             </h2>
             <p className="body-s">{texts?.mundos?.subtitulo}</p>
           </div>
-          <Button href='#' variant='ghost'>
+          <Button 
+            href='/mundos' 
+            variant='ghost'
+            onClick={(e) => {
+              e.preventDefault();
+              onNavigate('mundos', selectedWorld.id)
+            }}
+          >
             <FlechaDerIcon />
-            {texts?.mundos?.enlaces?.ver?.replace('{mundo}', selectedWorld)}
+            {texts?.mundos?.enlaces?.ver?.replace('{mundo}', selectedWorld.nombre)}
           </Button>
         </div>
         <div className={styles.worldsCards}>
@@ -89,7 +104,7 @@ const Home = ({ texts, onNavigate }) => {
               <div
                 key={mundo.id}
                 className={`${styles.worldCard} ${styles[`world-${mundo.id}`]}`}
-                onClick={() => setSelectedWorld(mundo.nombre)}
+                onClick={() => setSelectedWorld({ id: mundo.id, nombre: mundo.nombre })}
               >
                 <div className={styles.cardTop}>
                   <div className={styles.worldIcon}>{Icon}</div>

@@ -29,6 +29,7 @@ const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView }) =>
   const [isMenuAccesibilityOpen, setIsMenuAccesibilityOpen] = useState(false);
   const [textSize, setTextSize] = useState('Normal');
   const [accesibilityToggles, setAccesibilityToggles] = useState({});
+  
 
   // Reset accesibility options
   const handleResetAccesibility = () => {
@@ -188,10 +189,12 @@ const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView }) =>
       </nav>
       {/* / Mobile menu / */}
       <MobileMenu
+        texts={texts?.menuMovil}
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
         language={language}
         changeLanguage={changeLanguage}
+        onNavigate={onNavigate}
       />
     </header>
   )
