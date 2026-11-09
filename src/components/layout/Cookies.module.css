@@ -1,0 +1,47 @@
+.banner-cookies {
+  position: fixed;
+  z-index: 20;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  max-width: 70%;
+  margin-inline: auto;
+  padding: 24px;
+  border: var(--border-width) solid var(--border-strong);
+  border-radius: var(--radius-m);
+  background: var(--background-surface);
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+.cookiesTexts {
+  display: flex;
+  flex-direction: column;
+}
+
+.groupButtons {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-2);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .banner-cookies {
+    padding: var(--spacing-4);
+    flex-direction: column;
+    max-width: 100%;
+    gap: var(--spacing-4);
+  }
+  .banner-cookies .groupButtons {
+    display: flex;
+    width: 100%;
+    gap: var(--spacing-2);
+  }
+
+  .banner-cookies .groupButtons > * {
+    flex: 1;
+  }
+}
