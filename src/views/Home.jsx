@@ -17,8 +17,9 @@ import abanicoCromos from '../assets/cards/abanico-de-cromos.png'
 
 import styles from './Home.module.css'
 import Button from '../components/ui/Button/Button'
+import { Cookies } from '../components/layout/Cookies'
 
-const Home = ({ texts, onNavigate }) => {
+const Home = ({ texts, cookiesTexts, onNavigate }) => {
   const { mundos, loading, error } = useMundos();
   const [selectedWorld, setSelectedWorld] = useState({id: 'neon', nombre: 'Ciudad Neón'})
 
