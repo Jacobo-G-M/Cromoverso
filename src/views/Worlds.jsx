@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ChevronDerIcon from '../assets/icons/chevronder.svg?react'
 import { useMundos } from '../hooks/useMundos'
 import CoronaIcon from '../assets/icons/corona.svg?react'
@@ -43,6 +43,19 @@ const Worlds = ({ texts, onNavigate, initialWorld = 'neon' }) => {
   const { mundos: world } = useMundos(currentWorld);
   // Get all the worlds
   const { mundos: worlds } = useMundos();
+
+  useEffect(() => {
+    let params = new URLSearchParams();
+    
+    if (currentWorld) {params.set('mundo', currentWorld)}
+    if (selectedRarity) {params.set('rareza', selectedRarity)}
+    if (selectedType) {params.set('tipo', selectedType)}
+  
+    window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`)
+    return () => {}
+  }, [currentWorld, selectedRarity, selectedType])
+  
+
   const displayedCards = world?.cromos?.filter((c) => {
     const matchesRarity = selectedRarity ? c.rareza === selectedRarity : true;
     const matchesType = selectedType ? c.tipo === selectedType : true;

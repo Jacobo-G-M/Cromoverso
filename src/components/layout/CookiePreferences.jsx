@@ -61,7 +61,6 @@ export default function CookiePreferences({
       </section>
       {['preferencias', 'analiticas', 'marketing'].map((key) => {
         const cat = texts?.categorias?.[key];
-        console.log(selection);
         
         return (
           <section key={key} className={styles.cookieOption}>
