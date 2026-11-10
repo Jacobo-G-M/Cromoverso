@@ -5,7 +5,7 @@ import styles from './Footer.module.css'
 import LogoInverso from '../../assets/logo/logo-inverso.svg?react'
 
 
-const Footer = ({ texts }) => {
+const Footer = ({ texts, onOpenCookies }) => {
   const columns = Object.values(texts?.columnas ?? {});
   return (
     <footer className={styles.footer}>
@@ -23,6 +23,18 @@ const Footer = ({ texts }) => {
               {Object.values(item?.enlaces).map((link) => (
                 <a key={link} href={`/${link.toLowerCase()}`} className="body-s">{link}</a>
               ))}
+              {item?.titulo === texts?.columnas?.legal?.titulo && (
+                <a 
+                  href="#cookies" 
+                  className="body-s" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onOpenCookies?.();
+                  }}
+                >
+                  Cookies
+                </a>
+              )}
             </div>
           ))}
         </div>

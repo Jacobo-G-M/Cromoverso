@@ -1,0 +1,75 @@
+.dialog-preferences {
+  margin: auto;
+  width: min(560px, calc(100% - 32px));
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  padding: var(--spacing-6);
+  border: var(--border-width) solid var(--border-strong);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-pop);
+  color: var(--text-primary);
+  background-color: var(--background-surface);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.dialog-preferences:not([open]) {
+  display: none;
+}
+
+.dialog-preferences[open] {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: min(560px, calc(100% - 32px));
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  padding: var(--spacing-6);
+  border: var(--border-width) solid var(--border-strong);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-pop);
+  color: var(--text-primary);
+  background-color: var(--background-surface);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.dialog-preferences::backdrop {
+  background-color: rgba(26, 16, 51, 0.6);
+  backdrop-filter: blur(2px);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.cookieOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-4);
+  padding: var(--spacing-4);
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: var(--radius-m);
+}
+
+.buttonsGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+  margin-top: var(--spacing-2);
+}
+
+.buttonsGroup > * {
+  flex: 1 1 calc(50% - var(--spacing-2));
+}
+
+@media (max-width: 640px) {
+  .buttonsGroup > * {
+    flex: 1 1 100%;
+  }
+}
