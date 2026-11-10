@@ -5,7 +5,7 @@ import Home from './views/Home';
 import Worlds from './views/Worlds';
 import { Cookies } from './components/layout/Cookies';
 import CookiePreferences from './components/layout/CookiePreferences';
-import { getCookie, setCookie, COOKIES_ALL, COOKIES_NECCESSARY_ONLY } from './utils/cookies';
+import { getCookie, setCookie, deleteCookie, COOKIES_ALL, COOKIES_NECCESSARY_ONLY } from './utils/cookies';
 
 import { useTexts } from './hooks/useTexts';
 import Footer from './components/layout/Footer';
@@ -17,10 +17,13 @@ const App = () => {
   );
   
   const [selectedWorld, setSelectedWorld] = useState('neon');
-  const [language, setLanguage] = useState('es');
   const [showCookiesBanner, setShowCookiesBanner] = useState(true)
   const [showCookiesPreferences, setShowCookiesPreferences] = useState(false);
   const [cookiesConsent, setCookiesConsent] = useState(null);
+  const [language, setLanguage] = useState(
+    getCookie('idioma') ?? 'es'
+  );
+  
   const { texts, loading } = useTexts(language,
     [
       'navbar',
@@ -42,8 +45,20 @@ const App = () => {
   const handleSaveCookies = (selection) => {
     setCookie('consentimiento_cookies', selection);
     setCookiesConsent(selection);
+    if (selection.preferencias) {
+      setCookie('idioma', language)
+    } else {
+      deleteCookie('idioma')
+    }
     setShowCookiesBanner(false);
     setShowCookiesPreferences(false);
+  }
+
+  const handleLanguageChange = (newLang) => {
+    setLanguage(newLang);
+    if (!!cookiesConsent?.preferencias) {
+      setCookie('idioma', newLang)
+    }
   }
 
   useEffect(() => {
@@ -63,7 +78,7 @@ const App = () => {
       <Navbar
         texts={texts}
         language={language}
-        changeLanguage={setLanguage}
+        changeLanguage={handleLanguageChange}
         currentView={currentView}
         onNavigate={handleNavigate}
       />
