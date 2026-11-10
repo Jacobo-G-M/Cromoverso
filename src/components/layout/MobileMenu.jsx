@@ -17,16 +17,17 @@ import styles from './MobileMenu.module.css'
 import Button from '../ui/Button/Button'
 import PillSwitch from '../ui/PillSwitch/PillSwitch'
 
-const MobileMenu = ({ 
-  texts, 
-  isOpen, 
-  onClose, 
-  language, 
-  changeLanguage, 
+const MobileMenu = ({
+  texts,
+  isOpen,
+  onClose,
+  language,
+  changeLanguage,
   onNavigate,
   onOpenAccessibility
 }) => {
   if (!isOpen) return null;
+  const currentView = window.location.pathname.slice(1) || 'inicio';
 
   const navItems = [
     { label: 'Inicio', icon: <InicioIcon />, link: 'inicio' },
@@ -64,7 +65,13 @@ const MobileMenu = ({
                 {item.icon}
                 <span className={styles.itemLabel}>{texts?.enlaces[item.label.toLowerCase()]}</span>
               </div>
-              <ChevronDerIcon className={styles.chevron} />
+              {currentView === item.link ? (
+                <span className={styles.current}>
+                  <p className="detail-label">{texts?.aria?.estasAqui || 'Estas aquí'}</p>
+                </span>
+              ) : (
+                <ChevronDerIcon className={styles.chevron} />
+              )}
             </button>
           ))
         }
