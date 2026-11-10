@@ -39,9 +39,9 @@ npm i
 ```
 
 ### 3. Configurar variables de entorno
-Crea un archivo `.env` en la raíz del proyecto (o verifica su contenido):
-```env
-VITE_API_URL=https://yanethm-cromoverso-api.fly.dev/api/v1
+En el repositorio viene el archivo .env.example, así que simplemente cambia su nombre a .env
+```bash
+cp .env.example .env
 ```
 
 ### 4. Iniciar el servidor de desarrollo
