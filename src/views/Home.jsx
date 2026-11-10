@@ -42,7 +42,15 @@ const Home = ({ texts, cookiesTexts, onNavigate }) => {
             {texts?.hero?.subtituloMovil}
           </p>
           <div className={styles.heroButtons}>
-            <Button variant='accent' size='l' className='body-m-bold'>
+            <Button
+              variant='accent'
+              size='l'
+              className='body-m-bold'
+              onClick={(e) => {
+                e.preventDefault();
+                onNavigate('crear-cuenta', selectedWorld.id)
+              }}
+            >
               <span className={styles.desktopOnly}>
                 <RegaloIcon />
               </span>
