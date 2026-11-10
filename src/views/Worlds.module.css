@@ -233,6 +233,10 @@
 }
 
 @media (max-width: 768px) {
+  .worldsFilters {
+    display: none;
+  }
+
   .desktopOnly {
     display: none !important;
   }
@@ -265,7 +269,6 @@
 }
 
 @media (max-width: 1024px) {
-  .worldsFilters,
   .dropdownFilter {
     display: none;
   }
@@ -281,5 +284,12 @@
     flex-direction: column;
     padding: var(--spacing-4);
     gap: var(--spacing-4);
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .rarityFilter,
+  .typeFilter {
+    display: none;
   }
 }
