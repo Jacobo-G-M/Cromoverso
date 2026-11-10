@@ -173,12 +173,12 @@ const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView }) =>
         </div>
 
         {/* / Log in button / */}
-        <Button variant='secondary' size='s'>
+        <Button variant='secondary' size='s' onClick={(e) => { e.preventDefault(); onNavigate('iniciar-sesion'); }}>
           {nav?.botones?.ingresar ?? 'Ingresar'}
         </Button>
         {/* / Sign up button / */}
         <div className={styles.desktopOnly}>
-          <Button size='s'>
+          <Button size='s' onClick={(e) => { e.preventDefault(); onNavigate('crear-cuenta'); }}>
             {nav?.botones?.crearCuenta ?? "Crear cuenta"}
           </Button>
         </div>

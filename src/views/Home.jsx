@@ -21,7 +21,7 @@ import { Cookies } from '../components/layout/Cookies'
 
 const Home = ({ texts, cookiesTexts, onNavigate }) => {
   const { mundos, loading, error } = useMundos();
-  const [selectedWorld, setSelectedWorld] = useState({id: 'neon', nombre: 'Ciudad Neón'})
+  const [selectedWorld, setSelectedWorld] = useState({ id: 'neon', nombre: 'Ciudad Neón' })
 
 
   const WORLD_ICONS = {
@@ -48,7 +48,16 @@ const Home = ({ texts, cookiesTexts, onNavigate }) => {
               </span>
               {texts?.hero?.botones?.crearCuentaGratis ?? 'Crear cuenta gratis'}
             </Button>
-            <Button variant='secondary' size='l' className='body-m-bold'>
+            <Button
+              href='/mundos'
+              variant='secondary'
+              size='l'
+              className='body-m-bold'
+              onClick={(e) => {
+                e.preventDefault();
+                onNavigate('mundos', selectedWorld.id)
+              }}
+            >
               <span className={styles.desktopOnly}>
                 <AlbumIcon />
               </span>
@@ -85,8 +94,8 @@ const Home = ({ texts, cookiesTexts, onNavigate }) => {
             </h2>
             <p className="body-s">{texts?.mundos?.subtitulo}</p>
           </div>
-          <Button 
-            href='/mundos' 
+          <Button
+            href='/mundos'
             variant='ghost'
             onClick={(e) => {
               e.preventDefault();

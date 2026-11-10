@@ -10,6 +10,8 @@ import { getCookie, setCookie, deleteCookie, COOKIES_ALL, COOKIES_NECCESSARY_ONL
 import { useTexts } from './hooks/useTexts';
 import Footer from './components/layout/Footer';
 import Card from './components/ui/Card/Card';
+import { Login } from './views/Login';
+import { Signup } from './views/Signup';
 
 const App = () => {
   const [currentView, setCurrentView] = useState(
@@ -92,6 +94,12 @@ const App = () => {
             onNavigate={handleNavigate}
             initialWorld={selectedWorld}
           />
+        )}
+        {currentView === 'iniciar-sesion' && (
+          <Login />
+        )}
+        {currentView === 'crear-cuenta' && (
+          <Signup />
         )}
       </main>
       {showCookiesBanner && (
