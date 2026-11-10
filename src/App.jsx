@@ -4,6 +4,7 @@ import Navbar from './components/layout/Navbar'
 import Home from './views/Home';
 import Worlds from './views/Worlds';
 import { Cookies } from './components/layout/Cookies';
+import CookiePreferences from './components/layout/CookiePreferences';
 import { getCookie, setCookie, COOKIES_ALL, COOKIES_NECCESSARY_ONLY } from './utils/cookies';
 
 import { useTexts } from './hooks/useTexts';
@@ -15,6 +16,8 @@ const App = () => {
   const [selectedWorld, setSelectedWorld] = useState('neon');
   const [language, setLanguage] = useState('es');
   const [showCookiesBanner, setShowCookiesBanner] = useState(true)
+  const [showCookiesPreferences, setShowCookiesPreferences] = useState(false);
+  const [cookiesConsent, setCookiesConsent] = useState(null);
   const { texts, loading } = useTexts(language,
     [
       'navbar',
@@ -33,13 +36,22 @@ const App = () => {
     window.scrollTo(0, 0);
   }
 
+  const handleSaveCookies = (selection) => {
+    setCookie('consentimiento_cookies', selection);
+    setCookiesConsent(selection);
+    setShowCookiesBanner(false);
+    setShowCookiesPreferences(false);
+  }
+
   useEffect(() => {
     document.documentElement.lang = language;
   }, [language])
 
   useEffect(() => {
-    if (getCookie('consentimiento_cookies')) {
+    const savedCookies = getCookie('consentimiento_cookies');
+    if (savedCookies) {
       setShowCookiesBanner(false);
+      setCookiesConsent(savedCookies);
     }
   }, [])
 
@@ -67,18 +79,18 @@ const App = () => {
       {showCookiesBanner && (
         <Cookies 
           texts={texts?.cookies}
-          onAccept={() => {
-            setCookie('consentimiento_cookies', COOKIES_ALL);
-            setShowCookiesBanner(false);
-          }}
-          onReject={() => {
-            setCookie('consentimiento_cookies', COOKIES_NECCESSARY_ONLY);
-            setShowCookiesBanner(false);
-          }}
+          onAccept={() => handleSaveCookies(COOKIES_ALL)}
+          onReject={() => handleSaveCookies(COOKIES_NECCESSARY_ONLY)}
         />
       )}
-      
-      <Footer texts={texts?.footer}/>
+      <CookiePreferences 
+        open={showCookiesPreferences}
+        texts={texts?.cookies?.preferencias}
+        allow={cookiesConsent}
+        onSave={handleSaveCookies}
+        onClose={() => setShowCookiesPreferences(false)}
+      />
+      <Footer texts={texts?.footer} onOpenCookies={() => setShowCookiesPreferences(true)}/>
     </>
 
   )
