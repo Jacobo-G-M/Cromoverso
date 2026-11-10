@@ -67,6 +67,13 @@
   height: 20px;
 }
 
+.current {
+  background-color: var(--background-inverse);
+  color: var(--text-inverse);
+  padding: var(--spacing-0-5) var(--spacing-2);
+  border-radius: var(--radius-pill);
+}
+
 button.navItem:active {
   background-color: var(--brand-primary);
   color: var(--text-inverse);
