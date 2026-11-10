@@ -1,54 +1,86 @@
+// React core hooks
 import { useState } from 'react';
-import { useTexts } from '../../hooks/useTexts';
+
+// Reusable UI components
 import Button from '../ui/Button/Button';
-import Input from '../ui/Input/Input';
 import Dropdown from '../ui/Dropdown/Dropdown';
 import Switch from '../ui/Switch/Switch';
-import BuscarIcon from '../../assets/icons/buscar.svg?react';
-import GloboIcon from '../../assets/icons/globo.svg?react'
-import ChevronAbajoIcon from '../../assets/icons/chevronabajo.svg?react'
+import PillSwitch from '../ui/PillSwitch/PillSwitch';
+
+// SVG Icons imported as React components
 import AccesibilidadIcon from '../../assets/icons/accesibilidad.svg?react'
 import LogoNormalIcon from '../../assets/logo/logo-normal.svg?react'
 import LogoInversoIcon from '../../assets/logo/logo-inverso.svg?react';
 import MenuIcon from '../../assets/icons/menu.svg?react'
-import CheckIcon from '../../assets/icons/check.svg?react'
 import CerrarIcon from '../../assets/icons/cerrar.svg?react'
+
+// Component styles and child mobile navigation menu
 import styles from './Navbar.module.css'
 import MobileMenu from './MobileMenu';
-import PillSwitch from '../ui/PillSwitch/PillSwitch';
 
+// Allowed navigation link paths
 const LINKS_TITLES = {
   inicio: "/inicio",
   mundos: "/mundos",
 }
 
 
-// Navbar Component
+/**
+ * Global Navigation Bar Component
+ *
+ * Provides:
+ * - Brand logo with theme-aware variants (desktop vs. mobile)
+ * - Main navigation links with active view indicator
+ * - Accessibility controls panel (desktop dropdown and mobile bottom sheet)
+ * - Language switcher pill ('ES' / 'EN')
+ * - Authentication CTAs ('Ingresar' / 'Crear cuenta')
+ * - Mobile hamburger menu toggle
+ *
+ * @param {Object} props
+ * @param {Object} props.texts - Localized texts dictionary.
+ * @param {string} props.language - Active language code ('es' or 'en').
+ * @param {Function} props.changeLanguage - Callback to update global language.
+ * @param {Function} props.onNavigate - Callback for internal view switching.
+ * @param {string} props.currentView - Identifier of the active route view.
+ * @returns {JSX.Element} The rendered Navbar component.
+ */
 const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView }) => {
-  // States
+  // State to toggle the full-screen mobile navigation drawer
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // State to toggle the accessibility panel (dropdown on desktop, bottom sheet on mobile)
   const [isMenuAccesibilityOpen, setIsMenuAccesibilityOpen] = useState(false);
+
+  // Text size preference state ('Normal', 'Grande', etc.)
   const [textSize, setTextSize] = useState('Normal');
+
+  // Stores active accessibility toggles as key-boolean pairs (e.g. { altoContraste: true })
   const [accesibilityToggles, setAccesibilityToggles] = useState({});
 
 
-  // Reset accesibility options
+  /**
+   * Resets all accessibility toggles and restores default text size.
+   */
   const handleResetAccesibility = () => {
     setAccesibilityToggles({});
     setTextSize('Normal')
   }
 
-  // Get texts from navbar and accesibility
+  // Localized texts for navbar links and accessibility panel
   const nav = texts?.navbar;
   const accesibility = texts?.accesibilidad;
+
+  // Formats accessibility options into a structured array of { key, title, help }
   const accesibilityHelp = Object.entries(accesibility ?? {})
     .filter(([key, item]) => item?.titulo && item?.ayuda)
     .map(([key, item]) => {
       return { key, title: item.titulo, help: item.ayuda }
     })
-
+  
+  // Filters navigation links defined in API against whitelist in LINKS_TITLES
   const links = Object.entries(nav?.enlaces ?? {}).filter(([key]) => LINKS_TITLES[key])
-
+  
+  // Reusable accessibility panel JSX rendered both in desktop Dropdown and mobile sheet
   const accessibilityPanel = (
     <section className={styles.accesibility}>
       <div className={styles.accesibilityTitle}>
@@ -57,6 +89,7 @@ const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView }) =>
           <CerrarIcon />
         </Button>
       </div>
+      {/* Text size selector using PillSwitch */}
       <div className={styles.accesibilityTextSize}>
         <p className='body-m-bold'>{accesibility?.tamanoTexto?.titulo}</p>
         <PillSwitch
@@ -68,6 +101,7 @@ const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView }) =>
           fullWidth={true}
         />
       </div>
+      {/* Accessibility options list with individual interactive toggle switches */}
       <div className={styles.accesibilityOptions}>
         {accesibility && (
           accesibilityHelp.map((item, index) => (
@@ -91,6 +125,7 @@ const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView }) =>
           ))
         )}
 
+      {/* Footer with accessibility declaration link and reset preferences button */}
       </div>
       <div className={styles.accesibilityRestart}>
         <p
@@ -113,9 +148,9 @@ const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView }) =>
   return (
     // Navbar
     <header className={styles.navbar}>
-      {/* / Left component from navbar / */}
+      {/* Left section: Brand logo and desktop navigation links */}
       <nav className={styles.navLeft}>
-        {/* / Icon / */}
+        {/* Brand logo anchor with client-side navigation */}
         <a href="/" onClick={(e) => { e.preventDefault(); onNavigate('inicio'); }}>
           <span className={styles.desktopOnly}>
             <LogoNormalIcon />
@@ -124,7 +159,7 @@ const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView }) =>
             <LogoInversoIcon />
           </span>
         </a>
-        {/* / Links / */}
+        {/* Desktop navigation links */}
         {nav && (
           <>
             <div className={`${styles.desktopOnly} ${styles.buttonsLink}`}>
@@ -146,10 +181,10 @@ const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView }) =>
           </>
         )}
       </nav>
-      {/* / Right component from navbar / */}
+      {/* Right section: Accessibility, language switcher, auth buttons, mobile menu trigger */}
       <nav className={styles.navRight}>
         <div className={styles.desktopOnly}>
-          {/* / Accesibility button and menu / */}
+          {/* Desktop Accessibility Dropdown trigger */}
           <div className={styles.desktopOnly}>
             <Dropdown
               isOpen={isMenuAccesibilityOpen}
@@ -163,7 +198,7 @@ const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView }) =>
             </Dropdown>
           </div>
         </div>
-        {/* / Language switch / */}
+        {/* Desktop Language Switcher (ES / EN) */}
         <div className={styles.desktopOnly}>
           <PillSwitch
             options={['ES', 'EN']}
@@ -172,17 +207,17 @@ const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView }) =>
           />
         </div>
 
-        {/* / Log in button / */}
+        {/* Login CTA button */}
         <Button variant='secondary' size='s' onClick={(e) => { e.preventDefault(); onNavigate('iniciar-sesion'); }}>
           {nav?.botones?.ingresar ?? 'Ingresar'}
         </Button>
-        {/* / Sign up button / */}
+        {/* Desktop Sign Up CTA button */}
         <div className={styles.desktopOnly}>
           <Button size='s' onClick={(e) => { e.preventDefault(); onNavigate('crear-cuenta'); }}>
             {nav?.botones?.crearCuenta ?? "Crear cuenta"}
           </Button>
         </div>
-        {/* / Mobile menu button / */}
+        {/* Mobile hamburger menu toggle button */}
         <div className={styles.mobileOnly}>
           <Button
             variant='secondary'
@@ -195,7 +230,7 @@ const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView }) =>
           </Button>
         </div>
       </nav>
-      {/* / Mobile menu / */}
+      {/* Fullscreen mobile navigation overlay drawer */}
       <MobileMenu
         texts={texts?.menuMovil}
         isOpen={isMenuOpen}
@@ -208,6 +243,7 @@ const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView }) =>
           setIsMenuAccesibilityOpen(true);
         }}
       />
+      {/* Mobile Accessibility Bottom Sheet Modal */}
       {isMenuAccesibilityOpen && (
         <div 
           className={`${styles.mobileAccessibilityOverlay} ${styles.mobileOnly}`}

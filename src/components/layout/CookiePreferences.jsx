@@ -1,10 +1,31 @@
+// React core hook
 import { useEffect, useId, useRef, useState } from "react";
-import styles from "./CookiePreferences.module.css";
 
+// Styles and reusable UI components
+import styles from "./CookiePreferences.module.css";
 import Button from "../ui/Button/Button";
 import Switch from "../ui/Switch/Switch";
+
 import { COOKIES_ALL, COOKIES_NECCESSARY_ONLY } from "../../utils/cookies";
 
+/**
+ * Cookie Preferences Modal Dialog Component
+ *
+ * Implements an accessible HTML5 <dialog> element allowing users to:
+ * - Review detailed explanations for each cookie category.
+ * - Toggle individual non-essential cookie categories (Preferences, Analytics, Marketing).
+ * - Keep strictly necessary cookies permanently active.
+ * - Choose between saving custom selection, rejecting optionals, accepting all, or closing without changes.
+ *
+ * @param {Object} props
+ * @param {boolean} props.open - Whether the modal dialog is currently visible.
+ * @param {Object} props.texts - Localized copy for preferences dialog and categories.
+ * @param {Object} [props.allow] - Currently saved user consent object.
+ * @param {Function} props.onSave - Callback when persisting consent selection.
+ * @param {Function} props.onClose - Callback to close dialog without saving changes.
+ * @param {string} [props.error] - Optional error message display.
+ * @returns {JSX.Element} The rendered modal dialog element.
+ */
 export default function CookiePreferences({
   open,
   texts,
@@ -13,8 +34,11 @@ export default function CookiePreferences({
   onClose,
   error,
 }) {
+  // Reference to the <dialog> DOM element
   const dialog = useRef(null);
+  // Unique accessible ID for aria-labelledby
   const id = useId();
+  // Internal draft state holding user's toggle choices before saving
   const [selection, setSelection] = useState(allow ?? {
     necesarias: true,
     preferencias: false,
@@ -22,6 +46,11 @@ export default function CookiePreferences({
     marketing: false,
   });
 
+  /**
+   * Toggles the boolean state of a specific cookie category key.
+   *
+   * @param {string} key - Category key ('preferencias', 'analiticas', 'marketing').
+   */
   const handleToggle = (key) => {
     setSelection(prev => ({
       ...prev,
@@ -29,6 +58,7 @@ export default function CookiePreferences({
     }))
   }
 
+  // Synchronizes the native <dialog> element open/close state with React props
   useEffect(() => {
     if (open) {
       setSelection(allow);
@@ -49,6 +79,7 @@ export default function CookiePreferences({
         </p>
       </div>
       <section className={styles.cookieOption}>
+        {/* Strictly Necessary Cookies category (always active, non-toggleable) */}
         <div>
           <h3 className="heading-h4">{texts?.categorias?.necesarias?.titulo}</h3>
           <p className="body-s" style={{ color: 'var(--text-secondary)' }}>
@@ -59,6 +90,7 @@ export default function CookiePreferences({
           {texts?.etiquetas?.siempreActivas}
         </span>
       </section>
+      {/* Optional Cookie categories with interactive toggle switches */}
       {['preferencias', 'analiticas', 'marketing'].map((key) => {
         const cat = texts?.categorias?.[key];
         
@@ -77,16 +109,21 @@ export default function CookiePreferences({
           </section>
         );
       })}
+      {/* Action buttons grid */}
       <div className={styles.buttonsGroup}>
+        {/* Save active toggle selection */}
         <Button variant="primary" onClick={() => onSave(selection)}>
           {texts?.botones?.guardarSeleccion}
         </Button>
+        {/* Reject all optional categories */}
         <Button variant="secondary" onClick={() => onSave(COOKIES_NECCESSARY_ONLY)}>
           {texts?.botones?.rechazarOpcionales}
         </Button>
+        {/* Accept all categories */}
         <Button variant="primary" onClick={() => onSave(COOKIES_ALL)}>
           {texts?.botones?.aceptarTodas}
         </Button>
+        {/* Dismiss without saving changes */}
         <Button variant="secondary" onClick={onClose}>
           {texts?.botones?.cerrarSinGuardar}
         </Button>
