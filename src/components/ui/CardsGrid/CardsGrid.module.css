@@ -17,3 +17,14 @@
     gap: var(--spacing-2);
   }
 }
+
+@media (min-width: 1024px) and (max-width: 1230px) {
+  .album {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media (min-width: 769px) and (max-width: 1024px) {
+  .album {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
