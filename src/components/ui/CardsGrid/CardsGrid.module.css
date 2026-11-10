@@ -23,7 +23,7 @@
     grid-template-columns: repeat(4, 1fr);
   }
 }
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 769px) and (max-width: 1110px) {
   .album {
     grid-template-columns: repeat(3, 1fr);
   }
