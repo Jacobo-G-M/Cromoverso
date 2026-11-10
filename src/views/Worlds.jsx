@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ChevronDerIcon from '../assets/icons/chevronder.svg?react'
 import { useMundos } from '../hooks/useMundos'
 import CoronaIcon from '../assets/icons/corona.svg?react'
@@ -28,21 +28,41 @@ const Worlds = ({ texts, onNavigate, initialWorld = 'neon' }) => {
   const cromoTexts = texts?.components?.cromo;
   const sortOptionsDesktop = Object.values(albumTexts?.orden?.opciones ?? {})
     .map(item => item[0].toUpperCase() + item.slice(1));
-
+  
+  const urlParams = new URLSearchParams(window.location.search);
   // useState for current world. Default value: neon.
-  const [currentWorld, setCurrentWorld] = useState(initialWorld);
+  const [currentWorld, setCurrentWorld] = useState(
+    urlParams.get('mundo') ?? initialWorld
+  );
   // useState for sort menu button.
   const [isSortMenuActive, setIsSortMenuActive] = useState(false);
   //
   const [sortOption, setSortOption] = useState(sortOptionsDesktop[0]);
   // useState for the selected rarity filter
-  const [selectedRarity, setSelectedRarity] = useState(null);
+  const [selectedRarity, setSelectedRarity] = useState(
+    urlParams.get('rareza') ?? null
+  );
   // useState for the selected rarity filter
-  const [selectedType, setSelectedType] = useState(null);
+  const [selectedType, setSelectedType] = useState(
+    urlParams.get('tipo') ?? null
+  );
   // Get the current world
   const { mundos: world } = useMundos(currentWorld);
   // Get all the worlds
   const { mundos: worlds } = useMundos();
+
+  useEffect(() => {
+    let params = new URLSearchParams();
+    
+    if (currentWorld) {params.set('mundo', currentWorld)}
+    if (selectedRarity) {params.set('rareza', selectedRarity)}
+    if (selectedType) {params.set('tipo', selectedType)}
+  
+    window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`)
+    return () => {}
+  }, [currentWorld, selectedRarity, selectedType])
+  
+
   const displayedCards = world?.cromos?.filter((c) => {
     const matchesRarity = selectedRarity ? c.rareza === selectedRarity : true;
     const matchesType = selectedType ? c.tipo === selectedType : true;
@@ -223,7 +243,9 @@ const Worlds = ({ texts, onNavigate, initialWorld = 'neon' }) => {
             <Dropdown
               trigger={
                 <Button variant='secondary' size='s' onClick={() => setIsSortMenuActive(!isSortMenuActive)}>
-                  {albumTexts?.orden?.etiqueta?.replace('{orden}', sortOption.toLowerCase())}
+                  {albumTexts?.orden?.etiqueta?.replace(
+                    '{orden}', (sortOption || sortOptionsDesktop[0])?.toLowerCase()
+                    )}
                   <ChevronAbajoIcon />
                 </Button>
               }

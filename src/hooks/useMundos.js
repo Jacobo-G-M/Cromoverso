@@ -15,7 +15,6 @@ export function useMundos(id) {
     let current = true;
     setLoading(true);
     setError(false);
-    setMundos(null);
 
     async function loadWorlds() {
       try {

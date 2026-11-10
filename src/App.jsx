@@ -12,7 +12,10 @@ import Footer from './components/layout/Footer';
 import Card from './components/ui/Card/Card';
 
 const App = () => {
-  const [currentView, setCurrentView] = useState('inicio')
+  const [currentView, setCurrentView] = useState(
+    window.location.pathname.slice(1) || 'inicio'
+  );
+  
   const [selectedWorld, setSelectedWorld] = useState('neon');
   const [language, setLanguage] = useState('es');
   const [showCookiesBanner, setShowCookiesBanner] = useState(true)
@@ -77,20 +80,20 @@ const App = () => {
         )}
       </main>
       {showCookiesBanner && (
-        <Cookies 
+        <Cookies
           texts={texts?.cookies}
           onAccept={() => handleSaveCookies(COOKIES_ALL)}
           onReject={() => handleSaveCookies(COOKIES_NECCESSARY_ONLY)}
         />
       )}
-      <CookiePreferences 
+      <CookiePreferences
         open={showCookiesPreferences}
         texts={texts?.cookies?.preferencias}
         allow={cookiesConsent}
         onSave={handleSaveCookies}
         onClose={() => setShowCookiesPreferences(false)}
       />
-      <Footer texts={texts?.footer} onOpenCookies={() => setShowCookiesPreferences(true)}/>
+      <Footer texts={texts?.footer} onOpenCookies={() => setShowCookiesPreferences(true)} />
     </>
 
   )
