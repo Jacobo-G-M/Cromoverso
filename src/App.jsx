@@ -128,6 +128,24 @@ const App = () => {
     }
   }, [])
 
+  // Handle browser back and forward navigation
+  useEffect(() => {
+  const handlePopState = () => {
+    const path = window.location.pathname.slice(1) || 'inicio';
+    setCurrentView(path);
+    // 2. If there is a world parameter in the URL, it search it
+    const params = new URLSearchParams(window.location.search);
+    const worldParam = params.get('mundo');
+    if (worldParam) {
+      setSelectedWorld(worldParam);
+    }
+  };
+  window.addEventListener('popstate', handlePopState);
+  return () => {
+    window.removeEventListener('popstate', handlePopState);
+  };
+}, []);
+
   return (
     <>
     {/* Top navigation bar */}
