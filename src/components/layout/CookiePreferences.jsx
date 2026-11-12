@@ -39,12 +39,7 @@ export default function CookiePreferences({
   // Unique accessible ID for aria-labelledby
   const id = useId();
   // Internal draft state holding user's toggle choices before saving
-  const [selection, setSelection] = useState(allow ?? {
-    necesarias: true,
-    preferencias: false,
-    analiticas: false,
-    marketing: false,
-  });
+  const [selection, setSelection] = useState(allow ?? COOKIES_NECCESSARY_ONLY);
 
   /**
    * Toggles the boolean state of a specific cookie category key.
@@ -61,7 +56,7 @@ export default function CookiePreferences({
   // Synchronizes the native <dialog> element open/close state with React props
   useEffect(() => {
     if (open) {
-      setSelection(allow);
+      setSelection(allow ?? COOKIES_NECCESSARY_ONLY);
       if (!dialog.current.open) dialog.current.showModal();
     } else if (dialog.current.open) dialog.current.close();
   }, [open, allow]);
@@ -103,7 +98,7 @@ export default function CookiePreferences({
               </p>
             </div>
             <Switch
-              checked={!!selection[key]}
+              checked={!!selection?.[key]}
               onChange={() => handleToggle(key)}
             />
           </section>
