@@ -3,7 +3,8 @@
   flex-direction: row;
   gap: var(--spacing-5);
   align-items: center;
-  padding: var(--spacing-5) var(--spacing-7);
+  height: var(--navbar-height-desktop);
+  padding: 0 var(--spacing-7);
   border-bottom: var(--border-width) solid var(--border-strong);
   justify-content: space-between;
 }
@@ -12,6 +13,11 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-6)
+}
+
+.navLeft a {
+  display: inline-flex;
+  align-items: center;
 }
 
 .buttonsLink {
@@ -141,7 +147,8 @@
   }
 
   .navbar {
-    padding: var(--spacing-3) var(--spacing-4);
+    height: var(--navbar-height-mobile);
+    padding: 0 var(--spacing-4);
     background-color: var(--background-inverse);
     border-bottom: var(--border-width) solid var(--border-inverse);
   }

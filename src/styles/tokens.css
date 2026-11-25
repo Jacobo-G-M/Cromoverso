@@ -68,6 +68,10 @@
   --spacing-10: 72px;
   --border-width: 2px;
   --border-width-s: 1.5px;
+  --navbar-height-desktop: 76px;
+  --navbar-height-mobile: 60px;
+  --font-size-display-mobile: 36px;
+  --line-height-display-mobile: 42px;
 
   /* Font families (Google Fonts) */
   --font-unbounded: 'Unbounded', system-ui, sans-serif;

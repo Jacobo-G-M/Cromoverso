@@ -148,14 +148,21 @@
 
   .hero {
     flex-direction: column;
-    padding: var(--spacing-7) var(--spacing-4) var(--spacing-8);
+    padding: var(--spacing-6) var(--spacing-4) var(--spacing-6-5);
     background-image: url('../assets/background/rayos-movil.png');
     background-position: center top;
-    gap: var(--spacing-3);
+    gap: var(--spacing-4);
+  }
+
+  .hero h1 {
+    font-size: var(--font-size-display-mobile);
+    line-height: var(--line-height-display-mobile);
+    letter-spacing: -1px;
   }
 
   .heroContent {
     width: 100%;
+    gap: var(--spacing-4);
   }
 
   .heroVisual {
@@ -165,12 +172,14 @@
   .heroButtons {
     flex-direction: column;
     width: 100%;
+    margin-top: var(--spacing-2);
   }
 
   .heroButtons button,
   .heroButtons a {
     width: 100%;
     justify-content: center;
+    padding: var(--spacing-3) var(--spacing-5);
   }
 
   .worlds {
@@ -178,7 +187,31 @@
     gap: var(--spacing-4);
   }
 
+  .worldsHeader {
+    gap: var(--spacing-3);
+  }
+
+  .worldsHeaderDescription h2 {
+    font-size: 24px;
+    line-height: 30px;
+    white-space: nowrap;
+  }
+
   .worldsHeaderDescription p {
+    display: none;
+  }
+
+  .worldsHeader button,
+  .worldsHeader a {
+    padding: 0;
+    border: none;
+    color: var(--text-brand);
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .worldsHeader button svg,
+  .worldsHeader a svg {
     display: none;
   }
 
@@ -196,9 +229,14 @@
   }
 
   .worldCard {
-    flex: 0 0 155px;
+    flex: 0 0 160px;
     scroll-snap-align: start;
     border-radius: var(--radius-l);
+    box-shadow: var(--shadow-pop);
+  }
+
+  .worldCard p {
+    color: var(--text-secondary);
   }
 }
 
