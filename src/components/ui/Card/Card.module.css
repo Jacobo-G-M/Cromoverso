@@ -2,10 +2,12 @@
   background-color: var(--background-surface);
   border: var(--border-width) solid var(--border-strong);
   border-radius: var(--radius-s);
+  box-shadow: var(--shadow-pop-small);
   padding: var(--spacing-2);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2);
+  min-width: 0;
   position: relative;
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
@@ -107,6 +109,7 @@
 }
 
 .cardInfo {
+  min-width: 0;
   padding-bottom: var(--spacing-1);
 }
 
@@ -177,8 +180,14 @@
     padding: var(--spacing-1);
     gap: var(--spacing-1);
   }
+  .artArea {
+    border-radius: var(--radius-s);
+  }
   .cardInfo h4 {
     font-size: 10px;
     line-height: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }

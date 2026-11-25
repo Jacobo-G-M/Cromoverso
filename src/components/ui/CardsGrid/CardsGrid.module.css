@@ -4,13 +4,13 @@
   box-shadow: var(--shadow-pop);
   padding: var(--spacing-6);
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: var(--spacing-5);
 }
 
 @media (max-width: 768px) {
   .album {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     border: none;
     box-shadow: none;
     padding: 0;
@@ -20,11 +20,11 @@
 
 @media (min-width: 1024px) and (max-width: 1300px) {
   .album {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 @media (min-width: 769px) and (max-width: 1110px) {
   .album {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
