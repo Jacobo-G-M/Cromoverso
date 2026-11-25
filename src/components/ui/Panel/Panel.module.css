@@ -1,0 +1,6 @@
+.panel {
+  background-color: var(--background-page);
+  border: var(--border-width) solid var(--border-strong);
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-pop);
+}
