@@ -104,11 +104,42 @@ button.navItem:active {
   background-color: var(--background-surface);
   display: flex;
   flex-direction: row;
+  align-items: center;
   padding: var(--spacing-4) var(--spacing-5);
   gap: var(--spacing-3);
   justify-content: space-between;
 }
 
 .account button {
-  flex: 1
+  flex: 1;
+}
+
+.userProfile {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  min-width: 0;
+}
+
+.userAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--brand-accent);
+  color: var(--text-primary);
+  border: var(--border-width) solid var(--border-strong);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.userMeta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.logoutButton {
+  flex: 0 0 auto !important;
 }

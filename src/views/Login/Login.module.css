@@ -1,0 +1,249 @@
+.page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.showcase {
+  background-color: var(--background-inverse);
+  background-image: url('../../assets/background/rayos-web.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  padding: var(--spacing-6) var(--spacing-7) var(--spacing-7);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--spacing-5);
+  color: var(--text-inverse);
+}
+
+.showcaseTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+}
+
+.brandLink {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+}
+
+.backHomeLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  color: var(--text-inverse);
+  text-decoration: none;
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--radius-pill);
+  border: var(--border-width-s) solid var(--border-inverse);
+  background-color: rgba(43, 31, 82, 0.7);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.backHomeLink:hover {
+  background-color: var(--background-inverse-2);
+  border-color: var(--text-inverse-soft);
+}
+
+.backHomeLink svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.cardsShowcase {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-block: var(--spacing-2);
+}
+
+.cardsImage {
+  width: min(520px, 100%);
+  height: auto;
+}
+
+.showcaseCopy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-3);
+  max-width: 440px;
+}
+
+.seasonBadge {
+  background-color: var(--brand-primary-soft);
+  color: var(--text-brand);
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: var(--radius-pill);
+}
+
+.showcaseTitle {
+  color: var(--text-inverse);
+}
+
+.showcaseSubtitle {
+  color: var(--text-inverse-soft);
+}
+
+.formPanel {
+  background-color: var(--background-page);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-7) var(--spacing-6);
+}
+
+.formContainer {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-5);
+}
+
+.desktopLogo {
+  display: inline-flex;
+}
+
+.formHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.formSubtitle {
+  color: var(--text-secondary);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.fieldError {
+  color: var(--status-error);
+}
+
+.eyeButton {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.eyeButton:hover {
+  color: var(--text-primary);
+}
+
+.eyeButton svg {
+  width: 20px;
+  height: 20px;
+}
+
+.optionsRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-3);
+  flex-wrap: wrap;
+}
+
+.checkboxLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--brand-primary);
+  cursor: pointer;
+}
+
+.link {
+  color: var(--text-brand);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.submitButton {
+  width: 100%;
+  margin-top: var(--spacing-2);
+}
+
+.signupPrompt {
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 900px) {
+  .page {
+    grid-template-columns: 1fr;
+  }
+
+  .showcase {
+    background-image: url('../../assets/background/rayos-movil.png');
+    padding: var(--spacing-4) var(--spacing-4) var(--spacing-6);
+    gap: var(--spacing-4);
+  }
+
+  .cardsShowcase {
+    padding-block: 0;
+  }
+
+  .cardsImage {
+    width: min(320px, 92%);
+  }
+
+  .showcaseTitle {
+    font-size: 32px;
+    line-height: 38px;
+  }
+
+  .showcaseSubtitle {
+    display: none;
+  }
+
+  .formPanel {
+    padding: var(--spacing-6) var(--spacing-4) var(--spacing-7);
+    align-items: flex-start;
+  }
+
+  .formContainer {
+    max-width: 100%;
+  }
+
+  .desktopLogo {
+    display: none;
+  }
+
+  .formHeader h1 {
+    font-size: 28px;
+    line-height: 34px;
+  }
+
+  .optionsRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+  }
+}

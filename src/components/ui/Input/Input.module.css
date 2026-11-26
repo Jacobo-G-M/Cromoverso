@@ -9,6 +9,21 @@
   width: 100%;
 }
 
+.shape-pill {
+  border-radius: var(--radius-pill);
+}
+
+.shape-rounded {
+  border-radius: var(--radius-m);
+}
+
+.rightElement {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
 .wrapper:focus-within {
   border-color: var(--brand-primary);
   box-shadow: var(--glow-purple);
