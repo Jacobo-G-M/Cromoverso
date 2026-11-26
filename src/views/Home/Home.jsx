@@ -23,6 +23,10 @@ import abanicoCromos from '../../assets/cards/abanico-de-cromos.png'
 import styles from './Home.module.css'
 import Button from '../../components/ui/Button/Button'
 import { Cookies } from '../../components/layout/Cookies'
+import { LoadingOverlay } from '../../components/ui/LoadingOverlay/LoadingOverlay'
+import { Skeleton } from '../../components/ui/Skeleton/Skeleton'
+
+const WORLD_SKELETONS = Array.from({ length: 6 }, (_, idx) => idx);
 
 /**
  * Home View Component
@@ -37,7 +41,7 @@ import { Cookies } from '../../components/layout/Cookies'
  * @param {Function} props.onNavigate - Callback function to trigger internal view routing.
  * @returns {JSX.Element} The rendered Home page view.
  */
-const Home = ({ texts, cookiesTexts, onNavigate }) => {
+const Home = ({ texts, cookiesTexts, loadingLabel, onNavigate }) => {
   // Fetch worlds list, loading state, and error message from API hook
   const { mundos, loading, error } = useMundos();
   // Tracks the currently selected world in the preview grid (defaults to Ciudad Neón)
@@ -144,38 +148,46 @@ const Home = ({ texts, cookiesTexts, onNavigate }) => {
           </Button>
         </div>
         {/* Interactive world cards grid */}
-        <div className={styles.worldsCards}>
-          {mundos?.map((mundo, index) => {
-            // Retrieve matching SVG icon by world identifier
-            const Icon = WORLD_ICONS[mundo.id]
+        <LoadingOverlay loading={loading} label={loadingLabel ?? 'Cargando…'} fullscreen>
+          <div className={styles.worldsCards}>
+            {mundos?.length ? mundos.map((mundo, index) => {
+              // Retrieve matching SVG icon by world identifier
+              const Icon = WORLD_ICONS[mundo.id]
 
-            return (
-              <div
-                key={mundo.id}
-                className={`${styles.worldCard} ${styles[`world-${mundo.id}`]}`}
-                // Selects this world on click, updating the dynamic CTA link above
-                onClick={() => setSelectedWorld({ id: mundo.id, nombre: mundo.nombre })}
-              >
-                <div className={styles.cardTop}>
-                  <div className={styles.worldIcon}>{Icon}</div>
-                   {/* Visual pill badge displaying the world number (#1 to #6) when selected */}
-                  {selectedWorld.nombre === mundo.nombre && (
-                    <p className={`${styles.worldBadge} detail-note-bold`}>
-                      {texts?.mundos?.etiquetas?.mundo?.replace('{numero}', index + 1)}
-                    </p>
-                  )}
+              return (
+                <div
+                  key={mundo.id}
+                  className={`${styles.worldCard} ${styles[`world-${mundo.id}`]}`}
+                  // Selects this world on click, updating the dynamic CTA link above
+                  onClick={() => setSelectedWorld({ id: mundo.id, nombre: mundo.nombre })}
+                >
+                  <div className={styles.cardTop}>
+                    <div className={styles.worldIcon}>{Icon}</div>
+                     {/* Visual pill badge displaying the world number (#1 to #6) when selected */}
+                    {selectedWorld.nombre === mundo.nombre && (
+                      <p className={`${styles.worldBadge} detail-note-bold`}>
+                        {texts?.mundos?.etiquetas?.mundo?.replace('{numero}', index + 1)}
+                      </p>
+                    )}
+                  </div>
+                  {/* World name and card collection count */}
+                  <h4 className={`${styles['detail-label']} heading-h4`}>{mundo.nombre}</h4>
+                  <p className="body-s">
+                    {
+                      texts?.mundos?.etiquetas?.cromos?.replace('{cantidad}', mundo?.totalCromos)
+                    }
+                  </p>
                 </div>
-                {/* World name and card collection count */}
-                <h4 className={`${styles['detail-label']} heading-h4`}>{mundo.nombre}</h4>
-                <p className="body-s">
-                  {
-                    texts?.mundos?.etiquetas?.cromos?.replace('{cantidad}', mundo?.totalCromos)
-                  }
-                </p>
+              )
+            }) : WORLD_SKELETONS.map((slot) => (
+              <div key={slot} className={`${styles.worldCard} ${styles.worldSkeleton}`}>
+                <Skeleton width="44px" height="44px" radius="circle" />
+                <Skeleton width="75%" height="18px" radius="s" />
+                <Skeleton width="50%" height="14px" radius="s" />
               </div>
-            )
-          })}
-        </div>
+            ))}
+          </div>
+        </LoadingOverlay>
       </section>
     </>
   )

@@ -131,6 +131,7 @@
 .world-forja  { background-color: var(--world-forge-soft); }
 .world-orbita { background-color: var(--world-orbit-soft); }
 .world-niebla { background-color: var(--world-mist-soft); }
+.worldSkeleton { background-color: var(--background-surface); border-color: var(--border-subtle); box-shadow: none; }
 
 .mobileOnly {
   display: none;

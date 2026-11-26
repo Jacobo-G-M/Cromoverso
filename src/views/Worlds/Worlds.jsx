@@ -20,6 +20,11 @@ import styles from './Worlds.module.css'
 import Dropdown from '../../components/ui/Dropdown/Dropdown'
 import Button from '../../components/ui/Button/Button'
 import { CardsGrid } from '../../components/ui/CardsGrid/CardsGrid'
+import { StateMessage } from '../../components/ui/StateMessage/StateMessage'
+import { Skeleton } from '../../components/ui/Skeleton/Skeleton'
+import { LoadingOverlay } from '../../components/ui/LoadingOverlay/LoadingOverlay'
+
+const SKELETON_CARDS = Array.from({ length: 10 }, (_, idx) => idx);
 
 // Canonical order of worlds for numbering calculations (1 to 6)
 const WORLD_ORDER = ['neon', 'coral', 'bosque', 'forja', 'orbita', 'niebla'];
@@ -48,9 +53,10 @@ const RARITY_FILTERS = [
  * @returns {JSX.Element} The rendered Worlds catalog view.
  */
 const Worlds = ({ texts, onNavigate, initialWorld = 'neon' }) => {
-  // Localized texts corresponding to the album page and individual card badges
+  // Localized texts corresponding to the album page, global states, and error messages
   const albumTexts = texts?.paginas?.albumMundo;
-  const cromoTexts = texts?.components?.cromo;
+  const stateTexts = texts?.estados;
+  const errorTexts = texts?.errores;
 
   // Formats sorting dropdown options capitalizing the first letter
   const sortOptionsDesktop = Object.values(albumTexts?.orden?.opciones ?? {})
@@ -80,7 +86,13 @@ const Worlds = ({ texts, onNavigate, initialWorld = 'neon' }) => {
     urlParams.get('tipo') ?? null
   );
   // Fetch full details and cards for the currently selected world
-  const { mundos: world } = useMundos(currentWorld);
+  const {
+    mundos: world,
+    loading: worldLoading,
+    error: worldError,
+    errorCode: worldErrorCode,
+    refresh: refreshWorld,
+  } = useMundos(currentWorld);
 
   // Fetch overview list of all six worlds for sidebar navigation
   const { mundos: worlds } = useMundos();
@@ -366,11 +378,72 @@ const Worlds = ({ texts, onNavigate, initialWorld = 'neon' }) => {
               }}
             />
           </div>
-          {/* Cards Grid Component */}
-          <CardsGrid 
-            texts={texts} 
-            cards={displayedCards} 
-            onCardClick={(cardId) => onNavigate('cromo', cardId)} />
+          {/* Cards Collection States: Loading Overlay + Skeletons, Error, Empty, or Cards Grid */}
+          {!worldLoading && worldError && (
+            <StateMessage
+              variant="error"
+              title={stateTexts?.error?.titulo ?? 'No se pudo cargar'}
+              description={
+                errorTexts?.[worldErrorCode] ??
+                stateTexts?.error?.texto ??
+                errorTexts?.generico ??
+                'Algo falló al pedir los datos. Vuelve a intentarlo en unos segundos.'
+              }
+              actionLabel={stateTexts?.error?.botones?.reintentar ?? 'Reintentar'}
+              onAction={refreshWorld}
+            />
+          )}
+
+          {!worldLoading && !worldError && Array.isArray(displayedCards) && displayedCards.length === 0 && (
+            <StateMessage
+              variant="empty"
+              title={albumTexts?.vacio?.titulo ?? stateTexts?.vacio?.titulo ?? 'Ningún cromo coincide con estos filtros'}
+              description={albumTexts?.vacio?.texto ?? 'Prueba con otra rareza u otro tipo.'}
+              actionLabel={
+                selectedRarity || selectedType
+                  ? (albumTexts?.vacio?.botones?.limpiar ?? 'Quitar filtros')
+                  : undefined
+              }
+              onAction={
+                selectedRarity || selectedType
+                  ? () => {
+                    setSelectedRarity(null);
+                    setSelectedType(null);
+                  }
+                  : undefined
+              }
+            />
+          )}
+
+          {(worldLoading || (!worldError && Array.isArray(displayedCards) && displayedCards.length > 0)) && (
+            <LoadingOverlay
+              loading={worldLoading}
+              fullscreen
+              label={
+                world?.nombre && stateTexts?.cargandoMundo
+                  ? stateTexts.cargandoMundo.replace('{mundo}', world.nombre)
+                  : (stateTexts?.cargando ?? 'Cargando…')
+              }
+            >
+              {Array.isArray(displayedCards) && displayedCards.length > 0 ? (
+                <CardsGrid
+                  texts={texts}
+                  cards={displayedCards}
+                  onCardClick={(cardId) => onNavigate('cromo', cardId)}
+                />
+              ) : (
+                <div className={styles.skeletonGrid} aria-hidden="true">
+                  {SKELETON_CARDS.map((slot) => (
+                    <div key={slot} className={styles.skeletonCard}>
+                      <Skeleton className={styles.skeletonArt} radius="s" />
+                      <Skeleton width="80%" height="14px" radius="s" />
+                      <Skeleton width="55%" height="12px" radius="s" className={styles.skeletonLineShort} />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </LoadingOverlay>
+          )}
         </div>
       </div>
     </>

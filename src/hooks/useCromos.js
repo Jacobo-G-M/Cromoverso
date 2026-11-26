@@ -23,8 +23,9 @@ export function useCromos(id) {
   // Tracks loading state for spinners or loading indicators
   const [loading, setLoading] = useState(false);
 
-  // Tracks fetch failure status
+  // Tracks fetch failure status and API error code
   const [error, setError] = useState(false);
+  const [errorCode, setErrorCode] = useState(null);
 
   const [notFound, setNotFound] = useState(false);
 
@@ -37,6 +38,7 @@ export function useCromos(id) {
       setCard(null);
       setLoading(false);
       setError(false);
+      setErrorCode(null);
       setNotFound(false);
       return;
     }
@@ -49,6 +51,7 @@ export function useCromos(id) {
     let current = true;
     setLoading(true);
     setError(false);
+    setErrorCode(null);
     setNotFound(false);
 
     // Cards are rendered on screen until new data arrives (smooth transition).
@@ -67,7 +70,18 @@ export function useCromos(id) {
 
           return;
         }
-        if (!result.ok) throw new Error(`HTTP ${result.status}`)
+        if (!result.ok) {
+          let apiCode = 'generico';
+          try {
+            const errData = await result.json();
+            apiCode = errData?.error?.codigo ?? apiCode;
+          } catch {
+            // Keep generic code when response body is not valid JSON
+          }
+          const httpError = new Error(`HTTP ${result.status}`);
+          httpError.code = apiCode;
+          throw httpError;
+        }
         const data = await result.json();
 
       // Only update state if this effect instance is still active
@@ -76,7 +90,10 @@ export function useCromos(id) {
         // Ignore expected cancellation abort errors
         if (error.name === 'AbortError') return;
         console.error("Error loading the cards: ", error);
-        setError(true);
+        if (current) {
+          setError(true);
+          setErrorCode(error.code ?? 'generico');
+        }
       } finally {
         clearTimeout(limit);
         if (current) setLoading(false);
@@ -97,6 +114,7 @@ export function useCromos(id) {
     card,
     loading,
     error,
+    errorCode,
     notFound,
     refresh: () => {
       setTryCards((value) => value + 1)

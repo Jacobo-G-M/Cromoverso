@@ -22,8 +22,9 @@ export function useMundos(id) {
   // Tracks loading state for spinners or loading indicators
   const [loading, setLoading] = useState(true);
 
-  // Tracks fetch failure status
+  // Tracks fetch failure status and API error code
   const [error, setError] = useState(false);
+  const [errorCode, setErrorCode] = useState(null);
 
   // Counter used to trigger manual re-fetches
   const [tryMundos, setTryMundos] = useState(0);
@@ -39,6 +40,7 @@ export function useMundos(id) {
     let current = true;
     setLoading(true);
     setError(false);
+    setErrorCode(null);
 
     // Cards are rendered on screen until new data arrives (smooth transition).
 
@@ -48,7 +50,18 @@ export function useMundos(id) {
         const result = await fetch(`${API_URL}/mundos${id ? `/${id}` : ''}`, {
           signal: controller.signal,
         });
-        if (!result.ok) throw new Error(`HTTP ${result.status}`)
+        if (!result.ok) {
+          let apiCode = 'generico';
+          try {
+            const errData = await result.json();
+            apiCode = errData?.error?.codigo ?? apiCode;
+          } catch {
+            // Keep generic code when response body is not valid JSON
+          }
+          const httpError = new Error(`HTTP ${result.status}`);
+          httpError.code = apiCode;
+          throw httpError;
+        }
         const data = await result.json();
 
       // Only update state if this effect instance is still active
@@ -57,7 +70,10 @@ export function useMundos(id) {
         // Ignore expected cancellation abort errors
         if (error.name === 'AbortError') return;
         console.error("Error loading the worlds: ", error);
-        setError(true);
+        if (current) {
+          setError(true);
+          setErrorCode(error.code ?? 'generico');
+        }
       } finally {
         clearTimeout(limit);
         if (current) setLoading(false);
@@ -78,6 +94,7 @@ export function useMundos(id) {
     mundos,
     loading,
     error,
+    errorCode,
     refresh: () => {
       setTryMundos((value) => value + 1)
     },

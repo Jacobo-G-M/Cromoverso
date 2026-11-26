@@ -13,6 +13,7 @@ import Worlds from './views/Worlds/Worlds';
 import { Login } from './views/Login/Login';
 import { Signup } from './views/Signup/Signup';
 import { CardDetail } from './views/CardDetail/CardDetail';
+import { LoadingOverlay } from './components/ui/LoadingOverlay/LoadingOverlay';
 
 // Cookie management utilities and consent presets
 import { getCookie, setCookie, deleteCookie, COOKIES_ALL, COOKIES_NECCESSARY_ONLY } from './utils/cookies';
@@ -75,7 +76,8 @@ const App = () => {
       'componentes',
       'menuMovil',
       'cookies',
-      'estados'
+      'estados',
+      'errores'
     ]);
 
   /**
@@ -158,21 +160,23 @@ const App = () => {
 
   // Handle browser back and forward navigation
   useEffect(() => {
-  const handlePopState = () => {
-    const path = window.location.pathname.slice(1) || 'inicio';
-    setCurrentView(path);
-    // 2. If there is a world parameter in the URL, it search it
-    const params = new URLSearchParams(window.location.search);
-    const worldParam = params.get('mundo');
-    if (worldParam) {
-      setSelectedWorld(worldParam);
-    }
-  };
-  window.addEventListener('popstate', handlePopState);
-  return () => {
-    window.removeEventListener('popstate', handlePopState);
-  };
-}, []);
+    const handlePopState = () => {
+      const route = parseRoute(window.location.pathname);
+      setCurrentView(route.view);
+      setSelectedCardId(route.cardId);
+
+      // If there is a world parameter in the URL, synchronize selectedWorld
+      const params = new URLSearchParams(window.location.search);
+      const worldParam = params.get('mundo');
+      if (worldParam) {
+        setSelectedWorld(worldParam);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
 
   return (
     <>
@@ -186,26 +190,32 @@ const App = () => {
       />
       {/* Main content area: conditionally renders views based on currentView state */}
       <main>
-        {/* Home view */}
-        {currentView === 'inicio' && (
-          <Home texts={texts?.paginas?.inicio} onNavigate={handleNavigate} />
-        )}
-        {/* Worlds view */}
-        {currentView === 'mundos' && (
-          <Worlds
-            texts={texts}
-            onNavigate={handleNavigate}
-            initialWorld={selectedWorld}
-          />
-        )}
-        {/* Log in view */}
-        {currentView === 'iniciar-sesion' && (
-          <Login />
-        )}
-        {/* Sign up view */}
-        {currentView === 'crear-cuenta' && (
-          <Signup />
-        )}
+        <LoadingOverlay loading={loading} label={texts?.estados?.cargando ?? 'Cargando…'} fullscreen>
+          {/* Home view */}
+          {currentView === 'inicio' && (
+            <Home
+              texts={texts?.paginas?.inicio}
+              loadingLabel={texts?.estados?.cargando}
+              onNavigate={handleNavigate}
+            />
+          )}
+          {/* Worlds view */}
+          {currentView === 'mundos' && (
+            <Worlds
+              texts={texts}
+              onNavigate={handleNavigate}
+              initialWorld={selectedWorld}
+            />
+          )}
+          {/* Log in view */}
+          {currentView === 'iniciar-sesion' && (
+            <Login />
+          )}
+          {/* Sign up view */}
+          {currentView === 'crear-cuenta' && (
+            <Signup />
+          )}
+        </LoadingOverlay>
       </main>
       {/* Floating cookie consent banner (shown on first visit until user decides) */}
       {showCookiesBanner && (

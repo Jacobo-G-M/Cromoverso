@@ -1,0 +1,62 @@
+.stateBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: var(--spacing-4);
+  padding: var(--spacing-8) var(--spacing-5);
+  background-color: var(--background-surface);
+  border: var(--border-width) solid var(--border-strong);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow-pop);
+}
+
+.iconBadge {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: var(--border-width) solid var(--border-strong);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconBadge svg {
+  width: 24px;
+  height: 24px;
+}
+
+.empty .iconBadge {
+  background-color: var(--brand-primary-soft);
+  color: var(--brand-primary);
+}
+
+.error .iconBadge {
+  background-color: var(--status-error-soft);
+  color: var(--status-error);
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  max-width: 420px;
+}
+
+.description {
+  color: var(--text-secondary);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-2);
+}
+
+@media (max-width: 768px) {
+  .stateBox {
+    padding: var(--spacing-6) var(--spacing-4);
+  }
+}
