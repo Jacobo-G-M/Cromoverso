@@ -156,18 +156,6 @@ const App = () => {
     }
   }, [])
 
-<<<<<<< HEAD
-  useEffect(() => {
-    const handlePopState = () => {
-      const route = parseRoute(window.location.pathname);
-      setCurrentView(route.view);
-      setSelectedCardId(route.cardId);
-    }
-
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, [])
-=======
   // Handle browser back and forward navigation
   useEffect(() => {
   const handlePopState = () => {
@@ -185,7 +173,6 @@ const App = () => {
     window.removeEventListener('popstate', handlePopState);
   };
 }, []);
->>>>>>> 74d192cbbc874ef2b26aede7dfe10013a287a2e6
 
   return (
     <>
