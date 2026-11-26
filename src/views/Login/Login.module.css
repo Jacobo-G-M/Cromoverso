@@ -120,6 +120,60 @@
   color: var(--text-secondary);
 }
 
+.alertBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3) var(--spacing-4);
+  border: var(--border-width-s) solid var(--border-strong);
+  border-radius: var(--radius-m);
+  color: var(--text-primary);
+}
+
+.alertError {
+  background-color: var(--status-error-soft);
+}
+
+.alertError .alertIcon {
+  color: var(--status-error);
+}
+
+.alertWarning {
+  background-color: var(--status-warning-soft);
+}
+
+.alertWarning .alertIcon {
+  color: var(--status-warning);
+}
+
+.alertIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.alertIcon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.alertBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  min-width: 0;
+}
+
+.alertText {
+  color: var(--text-secondary);
+}
+
+.alertAction {
+  margin-top: var(--spacing-2);
+}
+
 .form {
   display: flex;
   flex-direction: column;
@@ -133,7 +187,16 @@
 }
 
 .fieldError {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-1);
   color: var(--status-error);
+}
+
+.fieldError svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
 }
 
 .eyeButton {
@@ -188,6 +251,13 @@
 .submitButton {
   width: 100%;
   margin-top: var(--spacing-2);
+}
+
+.submitButton:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .signupPrompt {
