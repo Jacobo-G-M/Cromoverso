@@ -201,6 +201,20 @@ export const CardDetail = ({ cardId, onClose, onNavigate, texts }) => {
 
       {!loading && card && (
         <div className={styles.container}>
+          <div className={styles.mobileTopBar}>
+            <span className={styles.dragHandle} aria-hidden="true" />
+            <Button
+              variant="secondary"
+              circle={true}
+              size="s"
+              className={styles.mobileCloseButton}
+              aria-label={detailTexts?.botones?.cerrar ?? 'Cerrar'}
+              onClick={onClose}
+            >
+              <CerrarIcon />
+            </Button>
+          </div>
+
           <div
             className={`${styles.containerLeft} ${styles[`world-${card.mundo}`]}`}
             style={card?.ilustracion?.colorBase ? { backgroundColor: card.ilustracion.colorBase } : undefined}
@@ -211,6 +225,18 @@ export const CardDetail = ({ cardId, onClose, onNavigate, texts }) => {
                 card={card}
                 size="l"
               />
+            </div>
+
+            <div className={styles.mobileCardMeta}>
+              <p className={`${styles.mobileCardId} data-card-number`}>{card.id}</p>
+              <p className="heading-h3" aria-hidden="true">{card.nombre}</p>
+              <p className={`${styles.mobileCardSubtitle} body-s`}>
+                {`${card.mundoNombre} · ${typeLabel}`}
+              </p>
+              <span className={`${styles.pill} ${styles.rarityPill} ${styles[`rarity-${card.rareza}`]}`}>
+                <RarityIcon />
+                <span className="detail-label">{rarityLabel}</span>
+              </span>
             </div>
           </div>
 
@@ -255,12 +281,21 @@ export const CardDetail = ({ cardId, onClose, onNavigate, texts }) => {
                 <FigureIcon />
               </span>
               <div className={styles.powerText}>
-                <span
-                  className="detail-label"
-                  style={card?.ilustracion?.colorBase ? { color: card.ilustracion.colorBase } : undefined}
-                >
-                  {detailTexts?.poder?.titulo ?? 'Poder'}
-                </span>
+                <div className={styles.powerLabelRow}>
+                  <span
+                    className={styles.mobilePowerIcon}
+                    style={card?.ilustracion?.colorBase ? { color: card.ilustracion.colorBase } : undefined}
+                    aria-hidden="true"
+                  >
+                    <FigureIcon />
+                  </span>
+                  <span
+                    className={`${styles.powerLabel} detail-label`}
+                    style={card?.ilustracion?.colorBase ? { color: card.ilustracion.colorBase } : undefined}
+                  >
+                    {detailTexts?.poder?.titulo ?? 'Poder'}
+                  </span>
+                </div>
                 <p className="body-m-bold">{card.poder}</p>
               </div>
             </div>
@@ -305,6 +340,10 @@ export const CardDetail = ({ cardId, onClose, onNavigate, texts }) => {
                   );
                 })}
               </div>
+
+              <p className={`${styles.attributesScale} detail-note`}>
+                {detailTexts?.atributos?.escala ?? 'Escala de 10 a 99.'}
+              </p>
             </section>
 
             {card.mundo && (
