@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: space-between;
   background-color: var(--background-inverse);
-  background-image: url('../assets/background/rayos-web.png');
+  background-image: url('../../assets/background/rayos-web.png');
   background-repeat: no-repeat;
   background-position: right center;
   background-size: cover;
@@ -143,7 +143,7 @@
   .hero {
     flex-direction: column;
     padding: var(--spacing-6) var(--spacing-4) var(--spacing-6-5);
-    background-image: url('../assets/background/rayos-movil.png');
+    background-image: url('../../assets/background/rayos-movil.png');
     background-position: center top;
     gap: var(--spacing-4);
   }

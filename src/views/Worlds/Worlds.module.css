@@ -243,10 +243,11 @@
 
   .worldsBanner {
     padding: var(--spacing-3) var(--spacing-4);
-    background-image: url('../assets/background/rayos-movil.png');
-    background-repeat: no-repeat;
-    background-position: center top;
-    background-size: cover;
+    background-image: repeating-conic-gradient(
+      from 0deg,
+      rgba(255, 255, 255, 0.08) 0deg 15deg,
+      transparent 15deg 30deg
+    );
   }
 
   .mobileHeader {

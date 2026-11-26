@@ -8,16 +8,32 @@ import { Cookies } from './components/layout/Cookies';
 import CookiePreferences from './components/layout/CookiePreferences';
 
 // Application view components
-import Home from './views/Home';
-import Worlds from './views/Worlds';
-import { Login } from './views/Login';
-import { Signup } from './views/Signup';
+import Home from './views/Home/Home';
+import Worlds from './views/Worlds/Worlds';
+import { Login } from './views/Login/Login';
+import { Signup } from './views/Signup/Signup';
+import { CardDetail } from './views/CardDetail/CardDetail';
 
 // Cookie management utilities and consent presets
 import { getCookie, setCookie, deleteCookie, COOKIES_ALL, COOKIES_NECCESSARY_ONLY } from './utils/cookies';
 
 // Custom hook to fetch dynamic localized copy from the backend API
 import { useTexts } from './hooks/useTexts';
+
+function parseRoute(pathname) {
+  const cardMatch = pathname.match(/^\/cromos\/([^/]+)$/);
+  if (cardMatch) {
+    return {
+      view: 'mundos',
+      cardId: decodeURIComponent(cardMatch[1])
+    }
+  }
+
+  return {
+    view: pathname.slice(1) || 'inicio',
+    cardId: null
+  }
+}
 
 /**
  * Root Application Component
@@ -32,11 +48,10 @@ import { useTexts } from './hooks/useTexts';
  * @returns {JSX.Element} The root application tree.
  */
 const App = () => {
+  const initialRoute = parseRoute(window.location.pathname);
   // Active view routing state: parses initial pathname (e.g., '/mundos' -> 'mundos') or defaults to 'inicio'
-  const [currentView, setCurrentView] = useState(
-    window.location.pathname.slice(1) || 'inicio'
-  );
-
+  const [currentView, setCurrentView] = useState(initialRoute.view);
+  const [selectedCardId, setSelectedCardId] = useState(initialRoute.cardId)
   // Selected world identifier passed down to views (defaults to 'neon')
   const [selectedWorld, setSelectedWorld] = useState('neon');
   // Controls visibility of the initial bottom floating cookie banner
@@ -59,7 +74,8 @@ const App = () => {
       'footer',
       'componentes',
       'menuMovil',
-      'cookies'
+      'cookies',
+      'estados'
     ]);
 
   /**
@@ -68,14 +84,26 @@ const App = () => {
    * @param {string} view - Target view identifier ('inicio', 'mundos', 'iniciar-sesion', 'crear-cuenta').
    * @param {string} [worldId] - Optional world identifier to focus on.
    */
-  const handleNavigate = (view, worldId) => {
+  const handleNavigate = (view, param) => {
+    if (view === 'cromo') {
+      setCurrentView('mundos');
+      setSelectedCardId(param);
+      window.history.pushState({}, '', `/cromos/${param}`)
+      return;
+    }
     setCurrentView(view);
-    if (worldId) setSelectedWorld(worldId);
+    setSelectedCardId(null);
+    if (param) setSelectedWorld(param);
 
     // Updates browser address bar without triggering a full page reload
     window.history.pushState({}, '', view === 'inicio' ? '/' : `/${view}`);
     // Scrolls to the top of the viewport on route change
     window.scrollTo(0, 0);
+  }
+
+  const handleCloseCard = () => {
+    setSelectedCardId(null);
+    window.history.pushState({}, '', '/mundos');
   }
 
   /**
@@ -128,6 +156,17 @@ const App = () => {
     }
   }, [])
 
+  useEffect(() => {
+    const handlePopState = () => {
+      const route = parseRoute(window.location.pathname);
+      setCurrentView(route.view);
+      setSelectedCardId(route.cardId);
+    }
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [])
+
   return (
     <>
     {/* Top navigation bar */}
@@ -176,6 +215,12 @@ const App = () => {
         allow={cookiesConsent}
         onSave={handleSaveCookies}
         onClose={() => setShowCookiesPreferences(false)}
+      />
+      <CardDetail 
+        cardId={selectedCardId}
+        onClose={handleCloseCard}
+        onNavigate={handleNavigate}
+        texts={texts}
       />
       {/* Global footer with link to open cookie preferences modal */}
       <Footer texts={texts?.footer} onOpenCookies={() => setShowCookiesPreferences(true)} />

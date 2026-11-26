@@ -7,15 +7,9 @@ import EstrellaIcon from '../../../assets/icons/estrella.svg?react';
 import RomboIcon from '../../../assets/icons/rombo.svg?react';
 import CirculoIcon from '../../../assets/icons/circulo.svg?react';
 
-// Card character artwork assets imported as React components
-import NeonHolographic from '../../../assets/cards/CV-001.svg';
-import BosqueHolographic from '../../../assets/cards/CV-041.png';
-import CoralHolographic from '../../../assets/cards/CV-081.png';
-import NieblaHolographic from '../../../assets/cards/CV-101.png';
-import CommonCard from '../../../assets/cards/CV-002.svg';
-
 // Styles
 import styles from './Card.module.css';
+import { CardIlustration } from '../CardIlustration/CardIlustration';
 
 /**
  * Individual Trading Card Component
@@ -47,7 +41,7 @@ const Card = ({
 }) => {
 
   const albumTexts = texts?.paginas?.albumMundo;
-  const cromoTexts = texts?.components?.cromo;
+  const cromoTexts = texts?.componentes?.cromo;
 
   // Formats card sequence number to three digits (e.g. 1 -> "001")
   const formattedNumber = String(card?.numero ?? '').padStart(3, '0');
@@ -60,22 +54,11 @@ const Card = ({
     comun: <CirculoIcon />
   }
 
-  // Specific high-resolution artworks for Legendary cards by world
-  const CARD_IMAGES = {
-    'neon': NeonHolographic,
-    'bosque': BosqueHolographic,
-    'coral': CoralHolographic,
-    'niebla': NieblaHolographic,
-  };
-
-  // Determines artwork asset: uses specific artwork for Legendary cards or standard
-  const characterSrc = (card?.rareza === 'legendaria' ? CARD_IMAGES[card?.mundo] : CommonCard) ?? NeonHolographic;
-
   // Interpolates world name and card type into descriptive subtitle (e.g. "Abismo Coral • Héroe")
   const cardText = albumTexts?.tarjeta?.tipo
     ?.replace('{mundo}', card?.mundoNombre)
     .replace('{tipo}',
-      albumTexts?.filtros?.tipo?.opciones[card?.tipo]
+      albumTexts?.filtros?.tipo?.opciones?.[card?.tipo] ?? card?.tipo
     );
 
 
@@ -91,10 +74,13 @@ const Card = ({
       {/* Optional '¡NUEVO!' badge */}
       {isNew &&
         <span className={styles.newBadge}>
-          {size === 's' ? cromoTexts?.estados?.nuevoExclamacion : cromoTexts?.estados?.nuevoExclamacion.toUpperCase() ?? '¡NUEVO!'}
+          {size === 's' ? cromoTexts?.estados?.nuevoExclamacion : cromoTexts?.estados?.nuevoExclamacion?.toUpperCase() ?? '¡NUEVO!'}
         </span>}
       {/* Visual illustration area with thematic background color per world */}
-      <div className={`${styles.artArea} ${styles[`world-${card?.mundo}`]}`}>
+      <div
+        className={`${styles.artArea} ${styles[`world-${card?.mundo}`]}`}
+        style={card?.ilustracion?.colorBase ? { backgroundColor: card.ilustracion.colorBase } : undefined}
+      >
         <div className={styles.cardHeader}>
           {/* Top badge overlay: 3-digit card number and rarity symbol */}
           <span className={`detail-note-bold ${styles.numberBadge}`}>
@@ -104,8 +90,13 @@ const Card = ({
             {RARITY_ICONS[card?.rareza] || <CirculoIcon />}
           </span>
         </div>
-        {/* Character illustration image */}
-        <img src={characterSrc} alt={card?.nombre} className={styles.characterImage} />
+        {/* Character illustration SVG */}
+        <CardIlustration
+          colorBase={card?.ilustracion?.colorBase}
+          figure={card?.ilustracion?.figura}
+          holographic={card?.holografico || card?.rareza === 'legendaria'}
+          className={styles.characterImage}
+        />
       </div>
 
       {/* Card text metadata container */}

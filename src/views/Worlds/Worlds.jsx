@@ -2,24 +2,24 @@
 import { useState, useEffect } from 'react'
 
 // Custom hook to fetch individual world data and complete world catalog
-import { useMundos } from '../hooks/useMundos'
+import { useMundos } from '../../hooks/useMundos'
 
 // SVG Icons imported as React components
-import ChevronDerIcon from '../assets/icons/chevronder.svg?react'
-import CoronaIcon from '../assets/icons/corona.svg?react'
-import EstrellaIcon from '../assets/icons/estrella.svg?react'
-import RomboIcon from '../assets/icons/rombo.svg?react'
-import CirculoIcon from '../assets/icons/circulo.svg?react'
-import ChevronAbajoIcon from '../assets/icons/chevronabajo.svg?react'
-import FlechaIzqIcon from '../assets/icons/flechaizq.svg?react';
-import BuscarIcon from '../assets/icons/buscar.svg?react';
+import ChevronDerIcon from '../../assets/icons/chevronder.svg?react'
+import CoronaIcon from '../../assets/icons/corona.svg?react'
+import EstrellaIcon from '../../assets/icons/estrella.svg?react'
+import RomboIcon from '../../assets/icons/rombo.svg?react'
+import CirculoIcon from '../../assets/icons/circulo.svg?react'
+import ChevronAbajoIcon from '../../assets/icons/chevronabajo.svg?react'
+import FlechaIzqIcon from '../../assets/icons/flechaizq.svg?react';
+import BuscarIcon from '../../assets/icons/buscar.svg?react';
 
 // Component-scoped styles
 import styles from './Worlds.module.css'
 // Reusable UI components
-import Dropdown from '../components/ui/Dropdown/Dropdown'
-import Button from '../components/ui/Button/Button'
-import { CardsGrid } from '../components/ui/CardsGrid/CardsGrid'
+import Dropdown from '../../components/ui/Dropdown/Dropdown'
+import Button from '../../components/ui/Button/Button'
+import { CardsGrid } from '../../components/ui/CardsGrid/CardsGrid'
 
 // Canonical order of worlds for numbering calculations (1 to 6)
 const WORLD_ORDER = ['neon', 'coral', 'bosque', 'forja', 'orbita', 'niebla'];
@@ -94,6 +94,7 @@ const Worlds = ({ texts, onNavigate, initialWorld = 'neon' }) => {
     if (selectedRarity) { params.set('rareza', selectedRarity) }
     if (selectedType) { params.set('tipo', selectedType) }
 
+    if (window.location.pathname.startsWith('/cromos/')) return;
     // Replace the URL without polluting the browser navigation history
     window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`)
     return () => { }
@@ -366,7 +367,10 @@ const Worlds = ({ texts, onNavigate, initialWorld = 'neon' }) => {
             />
           </div>
           {/* Cards Grid Component */}
-          <CardsGrid texts={texts} cards={displayedCards} />
+          <CardsGrid 
+            texts={texts} 
+            cards={displayedCards} 
+            onCardClick={(cardId) => onNavigate('cromo', cardId)} />
         </div>
       </div>
     </>

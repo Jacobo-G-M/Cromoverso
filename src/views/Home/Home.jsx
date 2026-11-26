@@ -1,28 +1,28 @@
 // React core and hooks
 import React, { useState } from 'react'
 // Custom hooks to fetch localized texts and world catalog data from the API
-import { useTexts } from '../hooks/useTexts'
-import { useMundos } from '../hooks/useMundos'
+import { useTexts } from '../../hooks/useTexts'
+import { useMundos } from '../../hooks/useMundos'
 
 // SVG Icons imported as React components
-import RegaloIcon from '../assets/icons/regalo.svg?react'
-import AlbumIcon from '../assets/icons/album.svg?react'
-import DestellosIcon from '../assets/icons/destellos.svg?react'
-import FlechaDerIcon from '../assets/icons/flechader.svg?react'
-import NeonIcon from '../assets/icons/neon.svg?react'
-import CoralIcon from '../assets/icons/coral.svg?react'
-import BosqueIcon from '../assets/icons/bosque.svg?react'
-import ForjaIcon from '../assets/icons/forja.svg?react'
-import OrbitaIcon from '../assets/icons/orbita.svg?react'
-import NieblaIcon from '../assets/icons/niebla.svg?react'
+import RegaloIcon from '../../assets/icons/regalo.svg?react'
+import AlbumIcon from '../../assets/icons/album.svg?react'
+import DestellosIcon from '../../assets/icons/destellos.svg?react'
+import FlechaDerIcon from '../../assets/icons/flechader.svg?react'
+import NeonIcon from '../../assets/icons/neon.svg?react'
+import CoralIcon from '../../assets/icons/coral.svg?react'
+import BosqueIcon from '../../assets/icons/bosque.svg?react'
+import ForjaIcon from '../../assets/icons/forja.svg?react'
+import OrbitaIcon from '../../assets/icons/orbita.svg?react'
+import NieblaIcon from '../../assets/icons/niebla.svg?react'
 
 // Static graphic asset for the hero card fan showcase
-import abanicoCromos from '../assets/cards/abanico-de-cromos.png'
+import abanicoCromos from '../../assets/cards/abanico-de-cromos.png'
 
 // Component-scoped CSS styles and reusable UI components
 import styles from './Home.module.css'
-import Button from '../components/ui/Button/Button'
-import { Cookies } from '../components/layout/Cookies'
+import Button from '../../components/ui/Button/Button'
+import { Cookies } from '../../components/layout/Cookies'
 
 /**
  * Home View Component

@@ -16,12 +16,16 @@ import Card from '../Card/Card';
  * @param {Array<Object>} props.cards - List of card objects to render.
  * @returns {JSX.Element} The rendered grid container.
  */
-export const CardsGrid = ({ texts, cards }) => {
+export const CardsGrid = ({ texts, cards, onCardClick }) => {
   
   return (
     <section className={styles.album}>
       {cards?.map((c) => (
-        <Card key={c?.id} texts={texts} card={c} />
+        <Card 
+          key={c?.id} 
+          texts={texts} 
+          card={c}
+          onClick={() => onCardClick?.(c.id)} />
       ))}
     </section>
   )

@@ -1,75 +1,5 @@
 import { useId } from 'react';
-
-const FIGURES = {
-  estrella: (
-    <path
-      d="M78.4 133.455L81.5106 140.934L89.5844 141.581L83.433 146.85L85.3124 154.729L78.4 150.507L71.4877 154.729L73.367 146.85L67.2156 141.581L75.2895 140.934L78.4 133.455Z"
-      fill="#FFD23F"
-    />
-  ),
-  rayo: (
-    <g transform="translate(66.4, 132)">
-      <path
-        d="M13 2L4 14H11L10 22L19 10H12L13 2Z"
-        fill="#FFD23F"
-        stroke="#FFD23F"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </g>
-  ),
-  ola: (
-    <g transform="translate(56.4, 122)">
-      <path
-        d="M26.5833 22.0013C26.5833 24.5326 24.5313 26.5846 22 26.5846C19.4687 26.5846 17.4167 24.5326 17.4167 22.0013C17.4167 19.47 19.4687 17.418 22 17.418C24.5313 17.418 26.5833 19.47 26.5833 22.0013Z"
-        stroke="#FFD23F"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M13.75 24.7503C16.5 20.1669 27.5 14.6669 30.25 17.4169"
-        stroke="#FFD23F"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </g>
-  ),
-  hoja: (
-    <g transform="translate(56.4, 122)">
-      <path
-        d="M21.0833 13.75L22.7333 18.5167L27.5 20.1667L22.7333 21.8167L21.0833 26.5833L19.4333 21.8167L14.6667 20.1667L19.4333 18.5167L21.0833 13.75Z"
-        fill="#FFD23F"
-      />
-      <path
-        d="M28.4167 23.832L29.15 25.8487L31.1667 26.582L29.15 27.3154L28.4167 29.332L27.6833 27.3154L25.6667 26.582L27.6833 25.8487L28.4167 23.832Z"
-        fill="#FFD23F"
-      />
-    </g>
-  ),
-  llama: (
-    <g transform="translate(56.4, 122)">
-      <path
-        d="M22 31.1667C25.6666 31.1667 28.4166 28.4167 28.4166 24.75C28.4166 21.0833 25.6666 19.25 24.75 16.5C23.8333 18.3333 22.9166 19.25 22 19.25C22 17.4167 21.0833 15.5833 19.25 13.75C19.25 17.4167 15.5833 19.25 15.5833 24.75C15.5833 28.4167 18.3333 31.1667 22 31.1667Z"
-        fill="#FFD23F"
-      />
-    </g>
-  ),
-  ojo: (
-    <g transform="translate(56.4, 122)">
-      <path
-        d="M12.8333 21.9987C12.8333 21.9987 16.5 15.582 22 15.582C27.5 15.582 31.1666 21.9987 31.1666 21.9987C31.1666 21.9987 27.5 28.4154 22 28.4154C16.5 28.4154 12.8333 21.9987 12.8333 21.9987Z"
-        stroke="#FFD23F"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle cx="22" cy="22" r="2.75" fill="#FFD23F" />
-    </g>
-  ),
-};
+import EstrellaIcon from '../../../assets/icons/estrella.svg?react';
 
 export const CardIlustration = ({
   colorBase,
@@ -85,6 +15,7 @@ export const CardIlustration = ({
       viewBox="0 0 157 182"
       fill="none"
       className={className}
+      data-figura={figure}
       aria-hidden="true"
     >
       <defs>
@@ -124,7 +55,14 @@ export const CardIlustration = ({
         <circle cx="78.4" cy="100.383" r="23.52" fill="#1A1033" />
         <rect x="58.1728" y="93.7988" width="40.4544" height="10.3488" rx="5.1744" fill="#FFD23F" />
 
-        {FIGURES[figure] ?? FIGURES.estrella}
+        <EstrellaIcon
+          x={66.4}
+          y={132}
+          width={24}
+          height={24}
+          color="#FFD23F"
+          fill="#FFD23F"
+        />
 
         {holographic && (
           <g style={{ mixBlendMode: 'screen' }}>
