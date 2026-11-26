@@ -11,6 +11,10 @@ import RomboIcon from '../../assets/icons/rombo.svg?react';
 import CirculoIcon from '../../assets/icons/circulo.svg?react';
 import CerrarIcon from '../../assets/icons/cerrar.svg?react';
 import RayoIcon from '../../assets/icons/rayo.svg?react';
+import MundoIcon from '../../assets/icons/mundo.svg?react';
+import DestellosIcon from '../../assets/icons/destellos.svg?react';
+import LlamaIcon from '../../assets/icons/llama.svg?react';
+import OjoIcon from '../../assets/icons/ojo.svg?react';
 import ChevronIzqIcon from '../../assets/icons/chevronizq.svg?react';
 import ChevronDerIcon from '../../assets/icons/chevronder.svg?react';
 
@@ -21,6 +25,17 @@ const RARITY_ICONS = {
   epica: EstrellaIcon,
   rara: RomboIcon,
   comun: CirculoIcon,
+};
+
+const FIGURE_ICONS = {
+  estrella: EstrellaIcon,
+  rayo: RayoIcon,
+  circulo: CirculoIcon,
+  ola: MundoIcon,
+  hoja: DestellosIcon,
+  llama: LlamaIcon,
+  orbita: MundoIcon,
+  runa: OjoIcon,
 };
 
 const DEFAULT_ATTR_LABELS = {
@@ -125,6 +140,7 @@ export const CardDetail = ({ cardId, onClose, onNavigate, texts }) => {
   }, [card, notFound, detailTexts]);
 
   const RarityIcon = RARITY_ICONS[card?.rareza] ?? CirculoIcon;
+  const FigureIcon = FIGURE_ICONS[card?.ilustracion?.figura] ?? RayoIcon;
   const rarityLabel = cromoTexts?.rarezas?.[card?.rareza] ?? DEFAULT_RARITY_LABELS[card?.rareza] ?? card?.rareza;
   const typeLabel = detailTexts?.encabezado?.tipos?.[card?.tipo] ?? DEFAULT_TYPE_LABELS[card?.tipo] ?? card?.tipo;
 
@@ -236,7 +252,7 @@ export const CardDetail = ({ cardId, onClose, onNavigate, texts }) => {
                 style={card?.ilustracion?.colorBase ? { backgroundColor: card.ilustracion.colorBase } : undefined}
                 aria-hidden="true"
               >
-                <RayoIcon />
+                <FigureIcon />
               </span>
               <div className={styles.powerText}>
                 <span
