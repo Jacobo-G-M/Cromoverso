@@ -4,6 +4,7 @@ import styles from './LoadingOverlay.module.css';
 export const LoadingOverlay = ({
   loading,
   label = 'Cargando…',
+  fullscreen = false,
   children,
   className = '',
 }) => {
@@ -14,7 +15,11 @@ export const LoadingOverlay = ({
       </div>
 
       {loading && (
-        <div className={styles.overlay} role="status" aria-live="polite">
+        <div
+          className={`${styles.overlay} ${fullscreen ? styles.fullscreen : ''}`}
+          role="status"
+          aria-live="polite"
+        >
           <div className={styles.badge}>
             <Spinner size="l" />
             {label && <p className="body-s-bold">{label}</p>}

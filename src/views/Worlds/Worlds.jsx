@@ -418,6 +418,7 @@ const Worlds = ({ texts, onNavigate, initialWorld = 'neon' }) => {
           {(worldLoading || (!worldError && Array.isArray(displayedCards) && displayedCards.length > 0)) && (
             <LoadingOverlay
               loading={worldLoading}
+              fullscreen
               label={
                 world?.nombre && stateTexts?.cargandoMundo
                   ? stateTexts.cargandoMundo.replace('{mundo}', world.nombre)
