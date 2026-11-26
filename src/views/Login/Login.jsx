@@ -18,7 +18,7 @@ import styles from './Login.module.css';
 
 const DEFAULT_RETRY_SECONDS = 30;
 
-export const Login = ({ texts, isSubmitting = false, onNavigate, onLogin }) => {
+export const Login = ({ texts, isSubmitting = false, sessionExpired = false, onNavigate, onLogin }) => {
   const loginTexts = texts?.paginas?.ingresar;
   const errorTexts = texts?.errores;
   const stateTexts = texts?.estados;
@@ -147,7 +147,17 @@ export const Login = ({ texts, isSubmitting = false, onNavigate, onLogin }) => {
   };
 
   const getBannerContent = () => {
-    if (!formError) return null;
+    if (!formError) {
+      if (sessionExpired) {
+        return {
+          tone: 'warning',
+          Icon: RelojIcon,
+          title: stateTexts?.sinSesion?.titulo ?? 'Inicia sesión para continuar',
+          text: errorTexts?.no_autenticado ?? 'Inicia sesión para continuar.',
+        };
+      }
+      return null;
+    }
 
     if (formError.type === 'required') {
       return {
