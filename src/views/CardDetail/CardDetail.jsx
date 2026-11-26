@@ -6,7 +6,7 @@ import Button from '../../components/ui/Button/Button';
 import Card from '../../components/ui/Card/Card';
 import { StateMessage } from '../../components/ui/StateMessage/StateMessage';
 import { Skeleton } from '../../components/ui/Skeleton/Skeleton';
-import { Spinner } from '../../components/ui/Spinner/Spinner';
+import { LoadingOverlay } from '../../components/ui/LoadingOverlay/LoadingOverlay';
 
 import CoronaIcon from '../../assets/icons/corona.svg?react';
 import EstrellaIcon from '../../assets/icons/estrella.svg?react';
@@ -163,39 +163,6 @@ export const CardDetail = ({ cardId, onClose, onNavigate, texts }) => {
       ariaLabelledBy={titleId}
       className={styles.dialog}
     >
-      {loading && (
-        <div
-          className={styles.skeletonLayout}
-          role="status"
-          aria-live="polite"
-          aria-label={stateTexts?.cargando ?? 'Cargando…'}
-        >
-          <Skeleton className={styles.skeletonCardBox} radius="l" />
-          <div className={styles.skeletonRight}>
-            <div className={styles.skeletonPills} aria-hidden="true">
-              <Skeleton width="84px" height="28px" radius="pill" />
-              <Skeleton width="96px" height="28px" radius="pill" />
-              <Skeleton width="72px" height="28px" radius="pill" />
-            </div>
-            <Skeleton width="60%" height="40px" radius="s" />
-            <Skeleton width="100%" height="68px" radius="m" />
-            <Skeleton width="90%" height="44px" radius="s" />
-            <div className={styles.skeletonAttrs} aria-hidden="true">
-              <Skeleton width="100%" height="14px" radius="pill" />
-              <Skeleton width="100%" height="14px" radius="pill" />
-              <Skeleton width="100%" height="14px" radius="pill" />
-              <Skeleton width="100%" height="14px" radius="pill" />
-            </div>
-            <div className={styles.loadingHeader}>
-              <Spinner size="s" />
-              <p className={`${styles.loadingHint} detail-note-bold`}>
-                {stateTexts?.cargando ?? 'Cargando…'}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
       {!loading && notFound && (
         <div className={styles.stateBox}>
           <p className="heading-giant" aria-hidden="true">404</p>
@@ -230,8 +197,10 @@ export const CardDetail = ({ cardId, onClose, onNavigate, texts }) => {
         />
       )}
 
-      {!loading && card && (
-        <div className={styles.container}>
+      {(loading || (!notFound && !error && card)) && (
+        <LoadingOverlay loading={loading} label={stateTexts?.cargando ?? 'Cargando…'}>
+          {card ? (
+            <div className={styles.container}>
           <div className={styles.mobileTopBar}>
             <span className={styles.dragHandle} aria-hidden="true" />
             <Button
@@ -387,6 +356,28 @@ export const CardDetail = ({ cardId, onClose, onNavigate, texts }) => {
             )}
           </div>
         </div>
+          ) : (
+            <div className={styles.skeletonLayout} aria-hidden="true">
+              <Skeleton className={styles.skeletonCardBox} radius="l" />
+              <div className={styles.skeletonRight}>
+                <div className={styles.skeletonPills}>
+                  <Skeleton width="84px" height="28px" radius="pill" />
+                  <Skeleton width="96px" height="28px" radius="pill" />
+                  <Skeleton width="72px" height="28px" radius="pill" />
+                </div>
+                <Skeleton width="60%" height="40px" radius="s" />
+                <Skeleton width="100%" height="68px" radius="m" />
+                <Skeleton width="90%" height="44px" radius="s" />
+                <div className={styles.skeletonAttrs}>
+                  <Skeleton width="100%" height="14px" radius="pill" />
+                  <Skeleton width="100%" height="14px" radius="pill" />
+                  <Skeleton width="100%" height="14px" radius="pill" />
+                  <Skeleton width="100%" height="14px" radius="pill" />
+                </div>
+              </div>
+            </div>
+          )}
+        </LoadingOverlay>
       )}
     </Dialog>
   );

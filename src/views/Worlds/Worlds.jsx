@@ -22,7 +22,7 @@ import Button from '../../components/ui/Button/Button'
 import { CardsGrid } from '../../components/ui/CardsGrid/CardsGrid'
 import { StateMessage } from '../../components/ui/StateMessage/StateMessage'
 import { Skeleton } from '../../components/ui/Skeleton/Skeleton'
-import { Spinner } from '../../components/ui/Spinner/Spinner'
+import { LoadingOverlay } from '../../components/ui/LoadingOverlay/LoadingOverlay'
 
 const SKELETON_CARDS = Array.from({ length: 10 }, (_, idx) => idx);
 
@@ -378,38 +378,7 @@ const Worlds = ({ texts, onNavigate, initialWorld = 'neon' }) => {
               }}
             />
           </div>
-          {/* Cards Collection States: Loading, Error, Empty, or Cards Grid */}
-          {worldLoading && (
-            <section
-              className={styles.skeletonWrapper}
-              role="status"
-              aria-live="polite"
-              aria-label={
-                world?.nombre && stateTexts?.cargandoMundo
-                  ? stateTexts.cargandoMundo.replace('{mundo}', world.nombre)
-                  : (stateTexts?.cargando ?? 'Cargando…')
-              }
-            >
-              <div className={styles.loadingHeader}>
-                <Spinner size="s" />
-                <p className={`${styles.loadingLabel} body-s-bold`}>
-                  {world?.nombre && stateTexts?.cargandoMundo
-                    ? stateTexts.cargandoMundo.replace('{mundo}', world.nombre)
-                    : (stateTexts?.cargando ?? 'Cargando…')}
-                </p>
-              </div>
-              <div className={styles.skeletonGrid} aria-hidden="true">
-                {SKELETON_CARDS.map((slot) => (
-                  <div key={slot} className={styles.skeletonCard}>
-                    <Skeleton className={styles.skeletonArt} radius="s" />
-                    <Skeleton width="80%" height="14px" radius="s" />
-                    <Skeleton width="55%" height="12px" radius="s" className={styles.skeletonLineShort} />
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
-
+          {/* Cards Collection States: Loading Overlay + Skeletons, Error, Empty, or Cards Grid */}
           {!worldLoading && worldError && (
             <StateMessage
               variant="error"
@@ -446,12 +415,33 @@ const Worlds = ({ texts, onNavigate, initialWorld = 'neon' }) => {
             />
           )}
 
-          {!worldLoading && !worldError && Array.isArray(displayedCards) && displayedCards.length > 0 && (
-            <CardsGrid
-              texts={texts}
-              cards={displayedCards}
-              onCardClick={(cardId) => onNavigate('cromo', cardId)}
-            />
+          {(worldLoading || (!worldError && Array.isArray(displayedCards) && displayedCards.length > 0)) && (
+            <LoadingOverlay
+              loading={worldLoading}
+              label={
+                world?.nombre && stateTexts?.cargandoMundo
+                  ? stateTexts.cargandoMundo.replace('{mundo}', world.nombre)
+                  : (stateTexts?.cargando ?? 'Cargando…')
+              }
+            >
+              {Array.isArray(displayedCards) && displayedCards.length > 0 ? (
+                <CardsGrid
+                  texts={texts}
+                  cards={displayedCards}
+                  onCardClick={(cardId) => onNavigate('cromo', cardId)}
+                />
+              ) : (
+                <div className={styles.skeletonGrid} aria-hidden="true">
+                  {SKELETON_CARDS.map((slot) => (
+                    <div key={slot} className={styles.skeletonCard}>
+                      <Skeleton className={styles.skeletonArt} radius="s" />
+                      <Skeleton width="80%" height="14px" radius="s" />
+                      <Skeleton width="55%" height="12px" radius="s" className={styles.skeletonLineShort} />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </LoadingOverlay>
           )}
         </div>
       </div>
