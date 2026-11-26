@@ -18,8 +18,9 @@ import { LoadingOverlay } from './components/ui/LoadingOverlay/LoadingOverlay';
 // Cookie management utilities and consent presets
 import { getCookie, setCookie, deleteCookie, COOKIES_ALL, COOKIES_NECCESSARY_ONLY } from './utils/cookies';
 
-// Custom hook to fetch dynamic localized copy from the backend API
+// Custom hooks to fetch dynamic localized copy and manage user session
 import { useTexts } from './hooks/useTexts';
+import { useSession } from './hooks/useSession';
 
 function parseRoute(pathname) {
   const cardMatch = pathname.match(/^\/cromos\/([^/]+)$/);
@@ -61,6 +62,8 @@ const App = () => {
   const [showCookiesPreferences, setShowCookiesPreferences] = useState(false);
   // Stores user cookie consent categories: { necesarias, preferencias, analiticas, marketing }
   const [cookiesConsent, setCookiesConsent] = useState(null);
+  // Active authenticated user session managed via useSession hook
+  const { user, submitting: isLoggingIn, login, logout } = useSession();
   // Active language state: hydrates from stored 'idioma' cookie if available, defaults to Spanish ('es')
   const [language, setLanguage] = useState(
     getCookie('idioma') ?? 'es'
@@ -107,6 +110,14 @@ const App = () => {
     setSelectedCardId(null);
     window.history.pushState({}, '', '/mundos');
   }
+
+  const handleLogin = async (credentials) => {
+    const result = await login(credentials);
+    if (result.ok) {
+      handleNavigate('inicio');
+    }
+    return result;
+  };
 
   /**
    * Persists user cookie consent choices and synchronizes preferences.
@@ -178,16 +189,22 @@ const App = () => {
     };
   }, []);
 
+  const isAuthView = currentView === 'iniciar-sesion';
+
   return (
     <>
-    {/* Top navigation bar */}
-      <Navbar
-        texts={texts}
-        language={language}
-        changeLanguage={handleLanguageChange}
-        currentView={currentView}
-        onNavigate={handleNavigate}
-      />
+      {/* Top navigation bar */}
+      {!isAuthView && (
+        <Navbar
+          texts={texts}
+          language={language}
+          changeLanguage={handleLanguageChange}
+          currentView={currentView}
+          user={user}
+          onLogout={logout}
+          onNavigate={handleNavigate}
+        />
+      )}
       {/* Main content area: conditionally renders views based on currentView state */}
       <main>
         <LoadingOverlay loading={loading} label={texts?.estados?.cargando ?? 'Cargando…'} fullscreen>
@@ -196,6 +213,7 @@ const App = () => {
             <Home
               texts={texts?.paginas?.inicio}
               loadingLabel={texts?.estados?.cargando}
+              user={user}
               onNavigate={handleNavigate}
             />
           )}
@@ -209,7 +227,12 @@ const App = () => {
           )}
           {/* Log in view */}
           {currentView === 'iniciar-sesion' && (
-            <Login />
+            <Login
+              texts={texts}
+              isSubmitting={isLoggingIn}
+              onNavigate={handleNavigate}
+              onLogin={handleLogin}
+            />
           )}
           {/* Sign up view */}
           {currentView === 'crear-cuenta' && (
@@ -240,7 +263,9 @@ const App = () => {
         texts={texts}
       />
       {/* Global footer with link to open cookie preferences modal */}
-      <Footer texts={texts?.footer} onOpenCookies={() => setShowCookiesPreferences(true)} />
+      {!isAuthView && (
+        <Footer texts={texts?.footer} onOpenCookies={() => setShowCookiesPreferences(true)} />
+      )}
     </>
 
   )

@@ -41,7 +41,7 @@ const WORLD_SKELETONS = Array.from({ length: 6 }, (_, idx) => idx);
  * @param {Function} props.onNavigate - Callback function to trigger internal view routing.
  * @returns {JSX.Element} The rendered Home page view.
  */
-const Home = ({ texts, cookiesTexts, loadingLabel, onNavigate }) => {
+const Home = ({ texts, cookiesTexts, loadingLabel, user, onNavigate }) => {
   // Fetch worlds list, loading state, and error message from API hook
   const { mundos, loading, error } = useMundos();
   // Tracks the currently selected world in the preview grid (defaults to Ciudad Neón)
@@ -69,21 +69,23 @@ const Home = ({ texts, cookiesTexts, loadingLabel, onNavigate }) => {
           </p>
           {/* Primary Action Buttons */}
           <div className={styles.heroButtons}>
-            {/* Primary CTA: Navigate to register / create account view */}
-            <Button
-              variant='accent'
-              size='l'
-              className='body-m-bold'
-              onClick={(e) => {
-                e.preventDefault();
-                onNavigate('crear-cuenta', selectedWorld.id)
-              }}
-            >
-              <span className={styles.desktopOnly}>
-                <RegaloIcon />
-              </span>
-              {texts?.hero?.botones?.crearCuentaGratis ?? 'Crear cuenta gratis'}
-            </Button>
+            {/* Primary CTA: Navigate to register / create account view (only when logged out) */}
+            {!user && (
+              <Button
+                variant='accent'
+                size='l'
+                className='body-m-bold'
+                onClick={(e) => {
+                  e.preventDefault();
+                  onNavigate('crear-cuenta', selectedWorld.id)
+                }}
+              >
+                <span className={styles.desktopOnly}>
+                  <RegaloIcon />
+                </span>
+                {texts?.hero?.botones?.crearCuentaGratis ?? 'Crear cuenta gratis'}
+              </Button>
+            )}
             {/* Secondary CTA: Navigate directly to the worlds catalog */}
             <Button
               href='/mundos'
@@ -102,13 +104,15 @@ const Home = ({ texts, cookiesTexts, loadingLabel, onNavigate }) => {
               {texts?.hero?.botones?.explorarMundos ?? 'Explorar los mundos'}
             </Button>
           </div>
-          {/* Desktop-only secondary note with sparkle icon */}
-          <div className={`${styles.heroNote} ${styles.desktopOnly}`}>
-            <DestellosIcon />
-            <p className='body-s'>
-              {texts?.hero?.subtitulo}
-            </p>
-          </div>
+          {/* Desktop-only secondary note with sparkle icon (only when logged out) */}
+          {!user && (
+            <div className={`${styles.heroNote} ${styles.desktopOnly}`}>
+              <DestellosIcon />
+              <p className='body-s'>
+                {texts?.hero?.subtitulo}
+              </p>
+            </div>
+          )}
         </div>
         {/* Hero Visual Area: Floating card fan showcase with holographic badge */}
         <div className={styles.heroVisual}>

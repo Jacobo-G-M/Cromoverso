@@ -13,6 +13,7 @@ import LogoNormalIcon from '../../assets/logo/logo-normal.svg?react'
 import LogoInversoIcon from '../../assets/logo/logo-inverso.svg?react';
 import MenuIcon from '../../assets/icons/menu.svg?react'
 import CerrarIcon from '../../assets/icons/cerrar.svg?react'
+import SalirIcon from '../../assets/icons/salir.svg?react'
 
 // Component styles and child mobile navigation menu
 import styles from './Navbar.module.css'
@@ -22,6 +23,15 @@ import MobileMenu from './MobileMenu';
 const LINKS_TITLES = {
   inicio: "/inicio",
   mundos: "/mundos",
+}
+
+function getInitials(name = '') {
+  return name
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? '')
+    .join('') || 'U';
 }
 
 
@@ -44,12 +54,14 @@ const LINKS_TITLES = {
  * @param {string} props.currentView - Identifier of the active route view.
  * @returns {JSX.Element} The rendered Navbar component.
  */
-const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView }) => {
+const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView, user, onLogout }) => {
   // State to toggle the full-screen mobile navigation drawer
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // State to toggle the accessibility panel (dropdown on desktop, bottom sheet on mobile)
   const [isMenuAccesibilityOpen, setIsMenuAccesibilityOpen] = useState(false);
+  // State to toggle the user account dropdown on desktop
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   // Text size preference state ('Normal', 'Grande', etc.)
   const [textSize, setTextSize] = useState('Normal');
@@ -207,16 +219,61 @@ const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView }) =>
           />
         </div>
 
-        {/* Login CTA button */}
-        <Button variant='secondary' size='s' onClick={(e) => { e.preventDefault(); onNavigate('iniciar-sesion'); }}>
-          {nav?.botones?.ingresar ?? 'Ingresar'}
-        </Button>
-        {/* Desktop Sign Up CTA button */}
-        <div className={styles.desktopOnly}>
-          <Button size='s' onClick={(e) => { e.preventDefault(); onNavigate('crear-cuenta'); }}>
-            {nav?.botones?.crearCuenta ?? "Crear cuenta"}
-          </Button>
-        </div>
+        {user ? (
+          <div className={styles.desktopOnly}>
+            <Dropdown
+              isOpen={isUserMenuOpen}
+              onClose={() => setIsUserMenuOpen(false)}
+              trigger={
+                <Button
+                  variant='accent'
+                  size='s'
+                  circle={true}
+                  className={styles.avatarButton}
+                  aria-label={nav?.usuario?.menu ?? 'Menú de tu cuenta'}
+                  onClick={() => setIsUserMenuOpen((prev) => !prev)}
+                >
+                  {getInitials(user.nombre)}
+                </Button>
+              }
+            >
+              <div className={styles.userMenu}>
+                <div className={styles.userInfo}>
+                  <p className="body-s-bold">{user.nombre}</p>
+                  {user.alias && (
+                    <p className="detail-note" style={{ color: 'var(--text-secondary)' }}>
+                      @{user.alias}
+                    </p>
+                  )}
+                </div>
+                <Button
+                  variant='secondary'
+                  size='s'
+                  onClick={() => {
+                    setIsUserMenuOpen(false);
+                    onLogout?.();
+                  }}
+                >
+                  <SalirIcon />
+                  {nav?.usuario?.cerrarSesion ?? 'Cerrar sesión'}
+                </Button>
+              </div>
+            </Dropdown>
+          </div>
+        ) : (
+          <>
+            {/* Login CTA button */}
+            <Button variant='secondary' size='s' onClick={(e) => { e.preventDefault(); onNavigate('iniciar-sesion'); }}>
+              {nav?.botones?.ingresar ?? 'Ingresar'}
+            </Button>
+            {/* Desktop Sign Up CTA button */}
+            <div className={styles.desktopOnly}>
+              <Button size='s' onClick={(e) => { e.preventDefault(); onNavigate('crear-cuenta'); }}>
+                {nav?.botones?.crearCuenta ?? "Crear cuenta"}
+              </Button>
+            </div>
+          </>
+        )}
         {/* Mobile hamburger menu toggle button */}
         <div className={styles.mobileOnly}>
           <Button
@@ -237,6 +294,8 @@ const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView }) =>
         onClose={() => setIsMenuOpen(false)}
         language={language}
         changeLanguage={changeLanguage}
+        user={user}
+        onLogout={onLogout}
         onNavigate={onNavigate}
         onOpenAccessibility={() => {
           setIsMenuOpen(false);

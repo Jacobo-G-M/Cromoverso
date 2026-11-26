@@ -16,11 +16,21 @@ import UsuarioIcon from '../../assets/icons/usuario.svg?react'
 import CampanaIcon from '../../assets/icons/campana.svg?react'
 import GloboIcon from '../../assets/icons/globo.svg?react'
 import AccesibilidadIcon from '../../assets/icons/accesibilidad.svg?react'
+import SalirIcon from '../../assets/icons/salir.svg?react'
 
 // Styles and reusable UI components
 import styles from './MobileMenu.module.css'
 import Button from '../ui/Button/Button'
 import PillSwitch from '../ui/PillSwitch/PillSwitch'
+
+function getInitials(name = '') {
+  return name
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? '')
+    .join('') || 'U';
+}
 
 
 /**
@@ -49,6 +59,8 @@ const MobileMenu = ({
   onClose,
   language,
   changeLanguage,
+  user,
+  onLogout,
   onNavigate,
   onOpenAccessibility
 }) => {
@@ -135,14 +147,59 @@ const MobileMenu = ({
         </div>
         {/* Visual divider line */}
         <hr className={styles.dividerAccount} />
-        {/* Authentication CTA buttons */}
+        {/* Authentication CTA buttons or active user session summary */}
         <div className={styles.account}>
-          <Button variant='secondary' size='m'>
-            {texts?.botones?.ingresar ?? 'Ingresar'}
-          </Button>
-          <Button size='m'>
-            {texts?.botones?.crearCuenta ?? 'Crear cuenta'}
-          </Button>
+          {user ? (
+            <>
+              <div className={styles.userProfile}>
+                <span className={`${styles.userAvatar} detail-note-bold`} aria-hidden="true">
+                  {getInitials(user.nombre)}
+                </span>
+                <div className={styles.userMeta}>
+                  <p className="body-s-bold">{user.nombre}</p>
+                  {user.alias && (
+                    <p className="detail-note" style={{ color: 'var(--text-secondary)' }}>
+                      @{user.alias}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <Button
+                variant='secondary'
+                size='s'
+                className={styles.logoutButton}
+                onClick={() => {
+                  onClose();
+                  onLogout?.();
+                }}
+              >
+                <SalirIcon />
+                {texts?.botones?.cerrarSesion ?? 'Cerrar sesión'}
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant='secondary'
+                size='m'
+                onClick={() => {
+                  onClose();
+                  onNavigate('iniciar-sesion');
+                }}
+              >
+                {texts?.botones?.ingresar ?? 'Ingresar'}
+              </Button>
+              <Button
+                size='m'
+                onClick={() => {
+                  onClose();
+                  onNavigate('crear-cuenta');
+                }}
+              >
+                {texts?.botones?.crearCuenta ?? 'Crear cuenta'}
+              </Button>
+            </>
+          )}
         </div>
       </section>
 
