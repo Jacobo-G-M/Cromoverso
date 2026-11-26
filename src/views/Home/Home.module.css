@@ -103,6 +103,12 @@
   border-radius: var(--radius-s);
   border: var(--border-strong) solid var(--border-width);
   box-shadow: var(--shadow-pop-small);
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.worldCard:hover {
+  box-shadow: var(--shadow-pop);
+  transform: translate(-2px, -2px);
 }
 
 .cardTop {
