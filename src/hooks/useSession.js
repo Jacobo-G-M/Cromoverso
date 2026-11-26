@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 const API_URL = import.meta.env.VITE_API_URL;
 const SESSION_TOKEN_KEY = 'cromoverso_session_token';
@@ -35,10 +35,28 @@ function clearSessionToken() {
   }
 }
 
+function parseRetryAfter(headerValue) {
+  if (!headerValue) return null;
+
+  const numericSeconds = Number(headerValue);
+  if (Number.isFinite(numericSeconds) && numericSeconds > 0) {
+    return Math.ceil(numericSeconds);
+  }
+
+  const parsedDate = Date.parse(headerValue);
+  if (!Number.isNaN(parsedDate)) {
+    const diffSeconds = Math.ceil((parsedDate - Date.now()) / 1000);
+    return diffSeconds > 0 ? diffSeconds : 1;
+  }
+
+  return null;
+}
+
 export function useSession() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const submittingRef = useRef(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -73,7 +91,13 @@ export function useSession() {
   }, []);
 
   const login = useCallback(async ({ correo, clave, keepSession = true }) => {
+    if (submittingRef.current) {
+      return { ok: false, ignored: true };
+    }
+
+    submittingRef.current = true;
     setSubmitting(true);
+
     try {
       const response = await fetch(`${API_URL}/sesion`, {
         method: 'POST',
@@ -85,7 +109,21 @@ export function useSession() {
       });
 
       if (!response.ok) {
-        return { ok: false, status: response.status };
+        const retryAfter = parseRetryAfter(response.headers.get('Retry-After'));
+        let errData = null;
+        try {
+          errData = await response.json();
+        } catch {
+          // Response body is not valid JSON
+        }
+
+        return {
+          ok: false,
+          status: response.status,
+          code: errData?.error?.codigo ?? null,
+          fields: errData?.error?.campos ?? null,
+          retryAfter,
+        };
       }
 
       const data = await response.json();
@@ -95,11 +133,17 @@ export function useSession() {
         return { ok: true, usuario: data.usuario };
       }
 
-      return { ok: false, status: response.status };
+      return { ok: false, status: response.status, code: 'generico' };
     } catch (error) {
       console.error('Error signing in:', error);
-      return { ok: false, status: 0 };
+      return {
+        ok: false,
+        status: 0,
+        code: 'conexion',
+        networkError: true,
+      };
     } finally {
+      submittingRef.current = false;
       setSubmitting(false);
     }
   }, []);
