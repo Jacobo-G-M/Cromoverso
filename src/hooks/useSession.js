@@ -1,35 +1,27 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 const API_URL = import.meta.env.VITE_API_URL;
-const SESSION_TOKEN_KEY = 'cromoverso_session_token';
+const ACTIVE_SESSION_FLAG = 'cromoverso_sesion_activa';
 
-function getStoredSessionToken() {
+function hadActiveSession() {
   try {
-    return localStorage.getItem(SESSION_TOKEN_KEY) || sessionStorage.getItem(SESSION_TOKEN_KEY);
+    return sessionStorage.getItem(ACTIVE_SESSION_FLAG) === '1';
   } catch {
-    return null;
+    return false;
   }
 }
 
-function saveSessionToken(token, keepSession) {
+function markSessionActive() {
   try {
-    localStorage.removeItem(SESSION_TOKEN_KEY);
-    sessionStorage.removeItem(SESSION_TOKEN_KEY);
-    if (!token) return;
-    if (keepSession) {
-      localStorage.setItem(SESSION_TOKEN_KEY, token);
-    } else {
-      sessionStorage.setItem(SESSION_TOKEN_KEY, token);
-    }
+    sessionStorage.setItem(ACTIVE_SESSION_FLAG, '1');
   } catch {
     // Ignore storage access errors
   }
 }
 
-function clearSessionToken() {
+function clearSessionActive() {
   try {
-    localStorage.removeItem(SESSION_TOKEN_KEY);
-    sessionStorage.removeItem(SESSION_TOKEN_KEY);
+    sessionStorage.removeItem(ACTIVE_SESSION_FLAG);
   } catch {
     // Ignore storage access errors
   }
@@ -52,45 +44,101 @@ function parseRetryAfter(headerValue) {
   return null;
 }
 
-export function useSession() {
+export function useSession({ onSessionExpired } = {}) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+
   const submittingRef = useRef(false);
+  const userRef = useRef(null);
+  const onSessionExpiredRef = useRef(onSessionExpired);
 
   useEffect(() => {
-    const controller = new AbortController();
-    const token = getStoredSessionToken();
+    userRef.current = user;
+  }, [user]);
 
-    async function loadSession() {
-      try {
-        const res = await fetch(`${API_URL}/sesion`, {
-          credentials: 'include',
-          signal: controller.signal,
-          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-        });
-        if (!res.ok) {
-          if (res.status === 401) clearSessionToken();
-          return;
+  useEffect(() => {
+    onSessionExpiredRef.current = onSessionExpired;
+  }, [onSessionExpired]);
+
+  const checkSession = useCallback(async ({ signal } = {}) => {
+    try {
+      const res = await fetch(`${API_URL}/sesion`, {
+        credentials: 'include',
+        signal,
+      });
+
+      if (res.status === 401) {
+        let code = null;
+        try {
+          const errData = await res.json();
+          code = errData?.error?.codigo ?? null;
+        } catch {
+          // Response body is not valid JSON
         }
-        const data = await res.json();
-        if (data?.usuario) {
-          setUser(data.usuario);
+
+        const wasAuthenticated = Boolean(userRef.current) || hadActiveSession();
+        clearSessionActive();
+        setUser(null);
+
+        if (wasAuthenticated && (!code || code === 'no_autenticado')) {
+          onSessionExpiredRef.current?.();
         }
-      } catch (error) {
-        if (error.name !== 'AbortError') {
-          console.error('Error checking session:', error);
-        }
-      } finally {
+        return null;
+      }
+
+      if (!res.ok) return null;
+
+      const data = await res.json();
+      if (data?.usuario) {
+        markSessionActive();
+        setUser(data.usuario);
+        return data.usuario;
+      }
+
+      return null;
+    } catch (error) {
+      if (error.name !== 'AbortError') {
+        console.error('Error checking session:', error);
+      }
+      return null;
+    }
+  }, []);
+
+  // Hydrate active session on initial load via HttpOnly cookie 'sesion'
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function hydrate() {
+      await checkSession({ signal: controller.signal });
+      if (!controller.signal.aborted) {
         setLoading(false);
       }
     }
 
-    loadSession();
+    hydrate();
     return () => controller.abort();
-  }, []);
+  }, [checkSession]);
 
-  const login = useCallback(async ({ correo, clave, keepSession = true }) => {
+  // Re-validate session when returning to the browser tab while authenticated
+  useEffect(() => {
+    if (!user) return;
+
+    const handleVisibilityOrFocus = () => {
+      if (document.visibilityState === 'hidden') return;
+      checkSession();
+    };
+
+    window.addEventListener('focus', handleVisibilityOrFocus);
+    document.addEventListener('visibilitychange', handleVisibilityOrFocus);
+
+    return () => {
+      window.removeEventListener('focus', handleVisibilityOrFocus);
+      document.removeEventListener('visibilitychange', handleVisibilityOrFocus);
+    };
+  }, [user, checkSession]);
+
+  const login = useCallback(async ({ correo, clave }) => {
     if (submittingRef.current) {
       return { ok: false, ignored: true };
     }
@@ -128,8 +176,8 @@ export function useSession() {
 
       const data = await response.json();
       if (data?.usuario) {
+        markSessionActive();
         setUser(data.usuario);
-        saveSessionToken(data.token, keepSession);
         return { ok: true, usuario: data.usuario };
       }
 
@@ -149,17 +197,15 @@ export function useSession() {
   }, []);
 
   const logout = useCallback(async () => {
-    const token = getStoredSessionToken();
+    clearSessionActive();
     try {
       await fetch(`${API_URL}/sesion`, {
         method: 'DELETE',
         credentials: 'include',
-        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
     } catch (error) {
       console.error('Error signing out:', error);
     } finally {
-      clearSessionToken();
       setUser(null);
     }
   }, []);
@@ -170,5 +216,6 @@ export function useSession() {
     submitting,
     login,
     logout,
+    checkSession,
   };
 }
