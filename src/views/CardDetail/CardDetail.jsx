@@ -4,6 +4,9 @@ import { useMundos } from '../../hooks/useMundos';
 import { Dialog } from '../../components/ui/Dialog/Dialog';
 import Button from '../../components/ui/Button/Button';
 import Card from '../../components/ui/Card/Card';
+import { StateMessage } from '../../components/ui/StateMessage/StateMessage';
+import { Skeleton } from '../../components/ui/Skeleton/Skeleton';
+import { Spinner } from '../../components/ui/Spinner/Spinner';
 
 import CoronaIcon from '../../assets/icons/corona.svg?react';
 import EstrellaIcon from '../../assets/icons/estrella.svg?react';
@@ -102,12 +105,13 @@ const CardNeighbors = ({ worldId, currentCardId, onNavigate, navTexts }) => {
 };
 
 export const CardDetail = ({ cardId, onClose, onNavigate, texts }) => {
-  const { card, loading, error, notFound, refresh } = useCromos(cardId);
+  const { card, loading, error, errorCode, notFound, refresh } = useCromos(cardId);
 
   const titleId = useId();
   const detailTexts = texts?.paginas?.detalleCromo;
   const cromoTexts = texts?.componentes?.cromo;
   const stateTexts = texts?.estados;
+  const errorTexts = texts?.errores;
 
   useEffect(() => {
     if (!card && !notFound) return;
@@ -160,8 +164,35 @@ export const CardDetail = ({ cardId, onClose, onNavigate, texts }) => {
       className={styles.dialog}
     >
       {loading && (
-        <div className={styles.stateBox} role="status" aria-live="polite">
-          <p className="body-m">{stateTexts?.cargando ?? 'Cargando…'}</p>
+        <div
+          className={styles.skeletonLayout}
+          role="status"
+          aria-live="polite"
+          aria-label={stateTexts?.cargando ?? 'Cargando…'}
+        >
+          <Skeleton className={styles.skeletonCardBox} radius="l" />
+          <div className={styles.skeletonRight}>
+            <div className={styles.skeletonPills} aria-hidden="true">
+              <Skeleton width="84px" height="28px" radius="pill" />
+              <Skeleton width="96px" height="28px" radius="pill" />
+              <Skeleton width="72px" height="28px" radius="pill" />
+            </div>
+            <Skeleton width="60%" height="40px" radius="s" />
+            <Skeleton width="100%" height="68px" radius="m" />
+            <Skeleton width="90%" height="44px" radius="s" />
+            <div className={styles.skeletonAttrs} aria-hidden="true">
+              <Skeleton width="100%" height="14px" radius="pill" />
+              <Skeleton width="100%" height="14px" radius="pill" />
+              <Skeleton width="100%" height="14px" radius="pill" />
+              <Skeleton width="100%" height="14px" radius="pill" />
+            </div>
+            <div className={styles.loadingHeader}>
+              <Spinner size="s" />
+              <p className={`${styles.loadingHint} detail-note-bold`}>
+                {stateTexts?.cargando ?? 'Cargando…'}
+              </p>
+            </div>
+          </div>
         </div>
       )}
 
@@ -169,10 +200,10 @@ export const CardDetail = ({ cardId, onClose, onNavigate, texts }) => {
         <div className={styles.stateBox}>
           <p className="heading-giant" aria-hidden="true">404</p>
           <h2 id={titleId} className="heading-h2">
-            {detailTexts?.noEncontrado?.titulo ?? 'No encontramos este cromo'}
+            {detailTexts?.noEncontrado?.titulo ?? stateTexts?.noEncontrado?.titulo ?? 'No encontramos este cromo'}
           </h2>
           <p className="body-m" style={{ color: 'var(--text-secondary)' }}>
-            {detailTexts?.noEncontrado?.texto ?? 'Puede que el número esté mal escrito.'}
+            {detailTexts?.noEncontrado?.texto ?? errorTexts?.no_encontrado ?? 'Puede que el número esté mal escrito.'}
           </p>
           <Button onClick={onClose} variant="primary" size="m">
             {detailTexts?.noEncontrado?.botones?.volver ?? 'Volver a los mundos'}
@@ -181,22 +212,22 @@ export const CardDetail = ({ cardId, onClose, onNavigate, texts }) => {
       )}
 
       {!loading && error && (
-        <div className={styles.stateBox}>
-          <h2 id={titleId} className="heading-h3">
-            {stateTexts?.error?.titulo ?? 'No se pudo cargar'}
-          </h2>
-          <p className="body-m" style={{ color: 'var(--text-secondary)' }}>
-            {stateTexts?.error?.texto ?? 'Algo falló al pedir los datos. Vuelve a intentarlo en unos segundos.'}
-          </p>
-          <div className={styles.stateActions}>
-            <Button onClick={refresh} variant="primary" size="s">
-              {stateTexts?.error?.botones?.reintentar ?? 'Reintentar'}
-            </Button>
-            <Button onClick={onClose} variant="secondary" size="s">
-              {detailTexts?.botones?.cerrar ?? 'Cerrar'}
-            </Button>
-          </div>
-        </div>
+        <StateMessage
+          variant="error"
+          titleId={titleId}
+          className={styles.modalState}
+          title={stateTexts?.error?.titulo ?? 'No se pudo cargar'}
+          description={
+            errorTexts?.[errorCode] ??
+            stateTexts?.error?.texto ??
+            errorTexts?.generico ??
+            'Algo falló al pedir los datos. Vuelve a intentarlo en unos segundos.'
+          }
+          actionLabel={stateTexts?.error?.botones?.reintentar ?? 'Reintentar'}
+          onAction={refresh}
+          secondaryActionLabel={detailTexts?.botones?.cerrar ?? 'Cerrar'}
+          onSecondaryAction={onClose}
+        />
       )}
 
       {!loading && card && (
