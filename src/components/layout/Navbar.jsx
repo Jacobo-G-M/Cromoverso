@@ -14,6 +14,7 @@ import LogoInversoIcon from '../../assets/logo/logo-inverso.svg?react';
 import MenuIcon from '../../assets/icons/menu.svg?react'
 import CerrarIcon from '../../assets/icons/cerrar.svg?react'
 import SalirIcon from '../../assets/icons/salir.svg?react'
+import UsuarioIcon from '../../assets/icons/usuario.svg?react'
 
 // Component styles and child mobile navigation menu
 import styles from './Navbar.module.css'
@@ -230,14 +231,17 @@ const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView, user
                   size='s'
                   circle={true}
                   className={styles.avatarButton}
-                  aria-label={nav?.usuario?.menu ?? 'Menú de tu cuenta'}
+                  title={user.nombre}
+                  aria-label={`${nav?.usuario?.menu ?? 'Menú de tu cuenta'}: ${user.nombre}`}
+                  aria-haspopup="menu"
+                  aria-expanded={isUserMenuOpen}
                   onClick={() => setIsUserMenuOpen((prev) => !prev)}
                 >
                   {getInitials(user.nombre)}
                 </Button>
               }
             >
-              <div className={styles.userMenu}>
+              <div className={styles.userMenu} role="menu">
                 <div className={styles.userInfo}>
                   <p className="body-s-bold">{user.nombre}</p>
                   {user.alias && (
@@ -246,17 +250,31 @@ const Navbar = ({ texts, language, changeLanguage, onNavigate, currentView, user
                     </p>
                   )}
                 </div>
-                <Button
-                  variant='secondary'
-                  size='s'
+                <hr className={styles.userMenuDivider} />
+                <button
+                  type="button"
+                  role="menuitem"
+                  className={`${styles.userMenuItem} body-s-bold`}
+                  onClick={() => {
+                    setIsUserMenuOpen(false);
+                    onNavigate('inicio');
+                  }}
+                >
+                  <UsuarioIcon />
+                  <span>{nav?.usuario?.perfil ?? 'Perfil y logros'}</span>
+                </button>
+                <button
+                  type="button"
+                  role="menuitem"
+                  className={`${styles.userMenuItem} ${styles.userMenuLogout} body-s-bold`}
                   onClick={() => {
                     setIsUserMenuOpen(false);
                     onLogout?.();
                   }}
                 >
                   <SalirIcon />
-                  {nav?.usuario?.cerrarSesion ?? 'Cerrar sesión'}
-                </Button>
+                  <span>{nav?.usuario?.cerrarSesion ?? 'Cerrar sesión'}</span>
+                </button>
               </div>
             </Dropdown>
           </div>
