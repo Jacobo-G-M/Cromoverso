@@ -1,5 +1,5 @@
 // React core hooks
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 // Layout structural components
 import Navbar from './components/layout/Navbar'
@@ -62,8 +62,21 @@ const App = () => {
   const [showCookiesPreferences, setShowCookiesPreferences] = useState(false);
   // Stores user cookie consent categories: { necesarias, preferencias, analiticas, marketing }
   const [cookiesConsent, setCookiesConsent] = useState(null);
-  // Active authenticated user session managed via useSession hook
-  const { user, submitting: isLoggingIn, login, logout } = useSession();
+  // Tracks whether the user was redirected to login after a 401 no_autenticado expiration
+  const [sessionExpired, setSessionExpired] = useState(false);
+
+  const handleSessionExpired = useCallback(() => {
+    setSessionExpired(true);
+    setSelectedCardId(null);
+    setCurrentView('iniciar-sesion');
+    window.history.pushState({}, '', '/iniciar-sesion');
+    window.scrollTo(0, 0);
+  }, []);
+
+  // Active authenticated user session managed via HttpOnly cookie ('sesion')
+  const { user, submitting: isLoggingIn, login, logout, checkSession } = useSession({
+    onSessionExpired: handleSessionExpired,
+  });
   // Active language state: hydrates from stored 'idioma' cookie if available, defaults to Spanish ('es')
   const [language, setLanguage] = useState(
     getCookie('idioma') ?? 'es'
@@ -90,10 +103,15 @@ const App = () => {
    * @param {string} [worldId] - Optional world identifier to focus on.
    */
   const handleNavigate = (view, param) => {
+    if (view !== 'iniciar-sesion' && sessionExpired) {
+      setSessionExpired(false);
+    }
+
     if (view === 'cromo') {
       setCurrentView('mundos');
       setSelectedCardId(param);
       window.history.pushState({}, '', `/cromos/${param}`)
+      if (user) checkSession();
       return;
     }
     setCurrentView(view);
@@ -104,6 +122,10 @@ const App = () => {
     window.history.pushState({}, '', view === 'inicio' ? '/' : `/${view}`);
     // Scrolls to the top of the viewport on route change
     window.scrollTo(0, 0);
+
+    if (user && view !== 'iniciar-sesion') {
+      checkSession();
+    }
   }
 
   const handleCloseCard = () => {
@@ -114,9 +136,19 @@ const App = () => {
   const handleLogin = async (credentials) => {
     const result = await login(credentials);
     if (result.ok) {
+      setSessionExpired(false);
       handleNavigate('inicio');
     }
     return result;
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    setSessionExpired(false);
+    setSelectedCardId(null);
+    setCurrentView('inicio');
+    window.history.pushState({}, '', '/');
+    window.scrollTo(0, 0);
   };
 
   /**
@@ -201,7 +233,7 @@ const App = () => {
           changeLanguage={handleLanguageChange}
           currentView={currentView}
           user={user}
-          onLogout={logout}
+          onLogout={handleLogout}
           onNavigate={handleNavigate}
         />
       )}
@@ -230,6 +262,7 @@ const App = () => {
             <Login
               texts={texts}
               isSubmitting={isLoggingIn}
+              sessionExpired={sessionExpired}
               onNavigate={handleNavigate}
               onLogin={handleLogin}
             />
