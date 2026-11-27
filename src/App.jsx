@@ -65,6 +65,8 @@ const App = () => {
   // Tracks whether the user was redirected to login after a 401 no_autenticado expiration
   const [sessionExpired, setSessionExpired] = useState(false);
 
+  const [lastCardVisited, setLastCardVisited] = useState('')
+
   const handleSessionExpired = useCallback(() => {
     setSessionExpired(true);
     setSelectedCardId(null);
@@ -105,11 +107,15 @@ const App = () => {
   const handleNavigate = (view, param) => {
     if (view !== 'iniciar-sesion' && sessionExpired) {
       setSessionExpired(false);
+      setLastCardVisited('')
     }
 
     if (view === 'cromo') {
       setCurrentView('mundos');
       setSelectedCardId(param);
+      setLastCardVisited(param);
+      console.log(lastCardVisited);
+      
       window.history.pushState({}, '', `/cromos/${param}`)
       if (user) checkSession();
       return;
@@ -117,6 +123,7 @@ const App = () => {
     setCurrentView(view);
     setSelectedCardId(null);
     if (param) setSelectedWorld(param);
+    
 
     // Updates browser address bar without triggering a full page reload
     window.history.pushState({}, '', view === 'inicio' ? '/' : `/${view}`);
@@ -137,7 +144,13 @@ const App = () => {
     const result = await login(credentials);
     if (result.ok) {
       setSessionExpired(false);
-      handleNavigate('inicio');
+      console.log(lastCardVisited);
+      
+      if (lastCardVisited.trim().length > 0 || lastCardVisited) {
+        handleNavigate('cromo', lastCardVisited)
+      } else {
+        handleNavigate('inicio');
+      }
     }
     return result;
   };
