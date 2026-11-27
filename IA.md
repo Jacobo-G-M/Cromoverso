@@ -78,3 +78,46 @@ El contenedor principal utilizaba una distribución porcentual rígida (`grid-te
 
 ### Solución
 Se ajustó el punto de corte en `Worlds.module.css` para que a partir de `1024px` hacia abajo la barra lateral se oculte por completo. En su lugar, se activó la barra superior de selectores tipo dropdown, agregando además un dropdown específico para cambiar de mundo. Esto permitió que la cuadrícula de cromos aprovechara el ancho total de la pantalla sin deformar los filtros.
+
+---
+
+## Entrada 6
+
+### Objetivo
+Mantener la ruta `/cromos/:id` en la barra de direcciones al abrir el detalle de un cromo sin que la vista del álbum la sobrescriba.
+
+### Problema
+Al abrir el detalle de una carta, la vista `Worlds` permanecía montada detrás del diálogo y su `useEffect` de sincronización de filtros seguía ejecutando `window.history.replaceState` con `?mundo=...`. Esto provocaba que la URL de `/cromos/:id` se reemplazara inesperadamente o perdiera coherencia al navegar hacia atrás con el historial del navegador.
+
+### Solución
+Se agregó una validación antes de actualizar la barra de direcciones en `Worlds.jsx` para no interferir cuando la ruta activa corresponde al detalle de un cromo:
+```javascript
+if (window.location.pathname.startsWith('/cromos/')) return;
+```
+Adicionalmente, en `App.jsx` se centralizó la lectura de rutas en `parseRoute` para manejar de forma uniforme tanto la carga inicial como el evento `popstate`.
+
+---
+
+## Entrada 7
+
+### Objetivo
+Conseguir que todas las tarjetas de la cuadrícula de cromos mantengan exactamente el mismo ancho y alto en versión móvil, independientemente de la longitud del nombre del personaje.
+
+### Problema
+En `CardsGrid.module.css` las columnas estaban definidas con `repeat(3, 1fr)`, lo cual equivale a `minmax(auto, 1fr)`. Cuando un cromo tenía un título largo con `white-space: nowrap`, el mínimo implícito `auto` ensanchaba su columna y, al tener el contenedor de ilustración `aspect-ratio: 157 / 182`, la tarjeta del centro terminaba siendo visiblemente más ancha y alta que las laterales.
+
+### Solución
+Se reemplazó la definición de columnas por `repeat(3, minmax(0, 1fr))` en `CardsGrid.module.css` y se agregó `min-width: 0` en `.card` y `.cardInfo` dentro de `Card.module.css`, permitiendo que el texto se recorte con elipsis sin deformar la cuadrícula.
+
+---
+
+## Entrada 8
+
+### Objetivo
+Mantener la sesión iniciada entre recargas usando únicamente la cookie `HttpOnly` del backend y redirigir a `/iniciar-sesion` solo cuando una sesión previa expira.
+
+### Problema
+Al consultar `GET /sesion` con `credentials: 'include'`, la API devuelve `401 no_autenticado` tanto para un visitante que nunca inició sesión como para un usuario cuya cookie caducó. Si se redirigía ante cualquier `401`, cualquier persona que entrara al catálogo sin cuenta era expulsada a la pantalla de inicio de sesión.
+
+### Solución
+En `useSession.js` se evitó guardar tokens en `localStorage` y se registró únicamente una bandera booleana no sensible en `sessionStorage` (`cromoverso_sesion_activa`) al autenticarse. De esta forma, cuando `GET /sesion` responde `401 no_autenticado`, la redirección a `/iniciar-sesion` solo se dispara si existía una sesión activa previa.
