@@ -252,18 +252,9 @@
 }
 
 .navLink {
-  display: inline-flex;
-  align-items: center;
   gap: var(--spacing-1);
-  background: transparent;
-  border: none;
   color: var(--text-brand);
-  cursor: pointer;
-  padding: var(--spacing-1) 0;
-}
-
-.navLink:hover {
-  text-decoration: underline;
+  padding: var(--spacing-1) var(--spacing-2);
 }
 
 .navLink svg {

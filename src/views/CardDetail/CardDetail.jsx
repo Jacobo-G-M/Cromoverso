@@ -76,29 +76,39 @@ const CardNeighbors = ({ worldId, currentCardId, onNavigate, navTexts }) => {
   return (
     <nav className={styles.navFooter} aria-label={navTexts?.anterior && navTexts?.siguiente ? `${navTexts.anterior} / ${navTexts.siguiente}` : 'Navegación entre cromos'}>
       {prevCard ? (
-        <button
-          type="button"
+        <Button
+          href={`/cromos/${prevCard.id}`}
+          variant="ghost"
+          size="s"
           className={`${styles.navLink} detail-note-bold`}
           aria-label={`${navTexts?.anterior ?? 'Cromo anterior'}: ${prevCard.nombre}`}
-          onClick={() => onNavigate('cromo', prevCard.id)}
+          onClick={(e) => {
+            e.preventDefault();
+            onNavigate('cromo', prevCard.id);
+          }}
         >
           <ChevronIzqIcon />
           <span>{`${String(prevCard.numero).padStart(3, '0')} ${prevCard.nombre}`}</span>
-        </button>
+        </Button>
       ) : (
         <span />
       )}
 
       {nextCard && (
-        <button
-          type="button"
+        <Button
+          href={`/cromos/${nextCard.id}`}
+          variant="ghost"
+          size="s"
           className={`${styles.navLink} detail-note-bold`}
           aria-label={`${navTexts?.siguiente ?? 'Cromo siguiente'}: ${nextCard.nombre}`}
-          onClick={() => onNavigate('cromo', nextCard.id)}
+          onClick={(e) => {
+            e.preventDefault();
+            onNavigate('cromo', nextCard.id);
+          }}
         >
           <span>{`${String(nextCard.numero).padStart(3, '0')} ${nextCard.nombre}`}</span>
           <ChevronDerIcon />
-        </button>
+        </Button>
       )}
     </nav>
   );
