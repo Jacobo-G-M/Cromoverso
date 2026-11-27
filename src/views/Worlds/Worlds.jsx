@@ -1,8 +1,9 @@
 // React core hooks
 import { useState, useEffect } from 'react'
 
-// Custom hook to fetch individual world data and complete world catalog
+// Custom hooks to fetch world metadata/catalog and backend-filtered cards
 import { useMundos } from '../../hooks/useMundos'
+import { useCromosFiltrados } from '../../hooks/useCromosFiltrados'
 
 // SVG Icons imported as React components
 import ChevronDerIcon from '../../assets/icons/chevronder.svg?react'
@@ -85,7 +86,7 @@ const Worlds = ({ texts, onNavigate, initialWorld = 'neon' }) => {
   const [selectedType, setSelectedType] = useState(
     urlParams.get('tipo') ?? null
   );
-  // Fetch full details and cards for the currently selected world
+  // Fetch full metadata and counts for the currently selected world
   const {
     mundos: world,
     loading: worldLoading,
@@ -93,6 +94,19 @@ const Worlds = ({ texts, onNavigate, initialWorld = 'neon' }) => {
     errorCode: worldErrorCode,
     refresh: refreshWorld,
   } = useMundos(currentWorld);
+
+  // Fetch filtered cards collection from backend (GET /cromos?mundo=...&rareza=...&tipo=...)
+  const {
+    cards: displayedCards,
+    loading: cardsLoading,
+    error: cardsError,
+    errorCode: cardsErrorCode,
+    refresh: refreshCards,
+  } = useCromosFiltrados({
+    mundo: currentWorld,
+    rareza: selectedRarity,
+    tipo: selectedType,
+  });
 
   // Fetch overview list of all six worlds for sidebar navigation
   const { mundos: worlds } = useMundos();
@@ -112,13 +126,15 @@ const Worlds = ({ texts, onNavigate, initialWorld = 'neon' }) => {
     return () => { }
   }, [currentWorld, selectedRarity, selectedType])
 
+  // Combined loading, error, and retry states across world metadata and filtered cards requests
+  const isLoading = worldLoading || cardsLoading;
+  const hasError = worldError || cardsError;
+  const activeErrorCode = cardsErrorCode ?? worldErrorCode;
 
-  // Filters cards collection based on active rarity and type selections
-  const displayedCards = world?.cromos?.filter((c) => {
-    const matchesRarity = selectedRarity ? c.rareza === selectedRarity : true;
-    const matchesType = selectedType ? c.tipo === selectedType : true;
-    return matchesRarity && matchesType;
-  });
+  const handleRetry = () => {
+    if (worldError) refreshWorld();
+    if (cardsError) refreshCards();
+  };
 
   // Dynamic configuration of card types with dynamic count for the current world
   const TYPE_FILTERS = [
@@ -379,25 +395,25 @@ const Worlds = ({ texts, onNavigate, initialWorld = 'neon' }) => {
             />
           </div>
           {/* Cards Collection States: Loading Overlay + Skeletons, Error, Empty, or Cards Grid */}
-          {!worldLoading && worldError && (
+          {!isLoading && hasError && (
             <StateMessage
               variant="error"
               title={stateTexts?.error?.titulo ?? 'No se pudo cargar'}
               description={
-                errorTexts?.[worldErrorCode] ??
+                errorTexts?.[activeErrorCode] ??
                 stateTexts?.error?.texto ??
                 errorTexts?.generico ??
                 'Algo falló al pedir los datos. Vuelve a intentarlo en unos segundos.'
               }
               actionLabel={stateTexts?.error?.botones?.reintentar ?? 'Reintentar'}
-              onAction={refreshWorld}
+              onAction={handleRetry}
             />
           )}
 
-          {!worldLoading && !worldError && Array.isArray(displayedCards) && displayedCards.length === 0 && (
+          {!isLoading && !hasError && Array.isArray(displayedCards) && displayedCards.length === 0 && (
             <StateMessage
               variant="empty"
-              title={albumTexts?.vacio?.titulo ?? stateTexts?.vacio?.titulo ?? 'Ningún cromo coincide con estos filtros'}
+              title={stateTexts?.vacio?.titulo ?? albumTexts?.vacio?.titulo ?? 'No hay nada por aquí todavía.'}
               description={albumTexts?.vacio?.texto ?? 'Prueba con otra rareza u otro tipo.'}
               actionLabel={
                 selectedRarity || selectedType
@@ -415,9 +431,9 @@ const Worlds = ({ texts, onNavigate, initialWorld = 'neon' }) => {
             />
           )}
 
-          {(worldLoading || (!worldError && Array.isArray(displayedCards) && displayedCards.length > 0)) && (
+          {(isLoading || (!hasError && Array.isArray(displayedCards) && displayedCards.length > 0)) && (
             <LoadingOverlay
-              loading={worldLoading}
+              loading={isLoading}
               fullscreen
               label={
                 world?.nombre && stateTexts?.cargandoMundo
